@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgCROSScaleApp", "AgCROSScaleApp\AgCROSScaleApp.csproj", "{8BF2550B-49D7-4814-869B-F9A8D2703001}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasurementEquipment", "MeasurementEquipment\MeasurementEquipment.csproj", "{60ED2438-D34B-43CF-A185-39F99E0F137F}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AgCROSScaleAppInstaller", "AgCROSScaleAppInstaller\AgCROSScaleAppInstaller.vdproj", "{A3DEE823-A458-4ED6-8F5E-E07FED3619F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BF2550B-49D7-4814-869B-F9A8D2703001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BF2550B-49D7-4814-869B-F9A8D2703001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BF2550B-49D7-4814-869B-F9A8D2703001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BF2550B-49D7-4814-869B-F9A8D2703001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60ED2438-D34B-43CF-A185-39F99E0F137F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60ED2438-D34B-43CF-A185-39F99E0F137F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60ED2438-D34B-43CF-A185-39F99E0F137F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60ED2438-D34B-43CF-A185-39F99E0F137F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3DEE823-A458-4ED6-8F5E-E07FED3619F7}.Debug|Any CPU.ActiveCfg = Debug
+		{A3DEE823-A458-4ED6-8F5E-E07FED3619F7}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF6CFCDC-BF2C-47B6-AD32-6A2399719723}
+	EndGlobalSection
+EndGlobal
