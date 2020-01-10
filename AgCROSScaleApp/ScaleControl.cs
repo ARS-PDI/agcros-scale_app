@@ -195,9 +195,13 @@ namespace AgCROSScaleApp
                     }
                 }
             }
+            catch (InvalidOperationException ioe)
+            {
+                MessageBox.Show($"{ioe.Message}", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show($"Encounted issue: {ex.Message}", "Error Connecting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Encounted issue: {ex.Message}", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             
         }

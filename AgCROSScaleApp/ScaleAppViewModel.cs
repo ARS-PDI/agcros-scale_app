@@ -13,6 +13,11 @@ namespace AgCROSScaleApp
     public class Constants
     {
         public const string TestDevicePortName = "TestPort";
+        public static readonly SerialPortValue NullCOM = new SerialPortValue
+        {
+            DisplayName = "No Ports Active",
+            PortName = "COM0"
+        };
     }
 
     public class ScaleAppViewModel
@@ -89,19 +94,15 @@ namespace AgCROSScaleApp
             }
             if (serialPorts.Count == 0)
             {
-                serialPorts.Add(
-                    new SerialPortValue
-                    {
-                        DisplayName = "No Ports Active",
-                        PortName = "COM0"
-
-                    });
+                serialPorts.Add(Constants.NullCOM);
             }
             this.SerialPorts = serialPorts;
         }
 
         public bool ConnectToDevice(SerialPortValue selectedItem)
         {
+            if (Constants.NullCOM.Equals(selectedItem))
+                throw new InvalidOperationException("No devices to connect to...");
             this.SelectedSerialPort = selectedItem;
             if (selectedItem.PortName.Equals(Constants.TestDevicePortName))
             {
@@ -179,7 +180,7 @@ namespace AgCROSScaleApp
             }
             else
             {
-                srValue =  new ScaleReadingValue
+                srValue = new ScaleReadingValue
                 {
                     RowID = rowId,
                     ReadingTimeStamp = timestamp,
