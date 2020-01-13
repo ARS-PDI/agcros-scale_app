@@ -67,7 +67,7 @@ namespace AgCROSScaleApp
         {
             string query = String.Format("select * from Win32_SerialPort");
             var serialPorts = new List<SerialPortValue>();
-            using (var searcher = new ManagementObjectSearcher(query))
+            using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
             using (var results = searcher.Get())
             {
                 foreach (ManagementObject result in results)
@@ -79,11 +79,11 @@ namespace AgCROSScaleApp
                         {
                             continue;
                         }
+                        var port = displayName.Split('(', ')')[1];
                         serialPorts.Add(new SerialPortValue
                         {
-                            DisplayName = result.GetPropertyValue("Name").ToString(),
-                            PortName = result.GetPropertyValue("DeviceID").ToString()
-
+                            DisplayName = displayName,
+                            PortName = port
                         });
                     }
                 }

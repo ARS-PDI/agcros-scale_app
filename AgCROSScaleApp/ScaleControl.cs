@@ -139,18 +139,24 @@ namespace AgCROSScaleApp
 
         internal void UpdateConfiguredOptions()
         {
-            Cursor = Cursors.WaitCursor;
-            this.vm.DetectSerialPorts();
-            this.cbxSerialPort.DataSource = new BindingSource(new BindingList<SerialPortValue>(vm.SerialPorts), null);
-            this.txtFileName.Text = vm.SaveFileName;
-            if (this.vm.SelectedSerialPort != null)
+            try
             {
-                if (this.cbxSerialPort.Items.Contains(this.vm.SelectedSerialPort)) 
+                Cursor = Cursors.WaitCursor;
+                this.vm.DetectSerialPorts();
+                this.cbxSerialPort.DataSource = new BindingSource(new BindingList<SerialPortValue>(vm.SerialPorts), null);
+                this.txtFileName.Text = vm.SaveFileName;
+                if (this.vm.SelectedSerialPort != null)
                 {
-                    this.cbxSerialPort.SelectedItem = this.cbxSerialPort.Items[this.cbxSerialPort.Items.IndexOf(this.vm.SelectedSerialPort)];
+                    if (this.cbxSerialPort.Items.Contains(this.vm.SelectedSerialPort))
+                    {
+                        this.cbxSerialPort.SelectedItem = this.cbxSerialPort.Items[this.cbxSerialPort.Items.IndexOf(this.vm.SelectedSerialPort)];
+                    }
                 }
+                Cursor = Cursors.Default;
+            } catch (Exception ex)
+            {
+                MessageBox.Show($"Error:{ex.Message}", "Error Setting Up", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            Cursor = Cursors.Default;
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
