@@ -57,6 +57,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6720E40EFDA541EB8B4AD77DD0A1DF42"
+        "OwnerKey" = "8:_8424F52CD4E43760727812D0BD2BAFD0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_68C4D529949448107CF2C5D7EA222A5B"
         "OwnerKey" = "8:_0688AB2EC787B8E69E6CAA2BA0EDD514"
         "MsmSig" = "8:_UNDEFINED"
@@ -204,10 +210,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
                     }
                 }
             }
@@ -596,7 +602,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AgCROSScaleApp"
         "ProductCode" = "8:{B387277D-165F-4D79-9D82-FDBE967ED2A1}"
-        "PackageCode" = "8:{5A138297-9F4A-4A65-9179-C1F540B62CE2}"
+        "PackageCode" = "8:{E1950F2B-38AB-49BB-8E3B-2E568333F5AF}"
         "UpgradeCode" = "8:{1D14A5A2-D26C-469E-8B51-664D2279DF36}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
