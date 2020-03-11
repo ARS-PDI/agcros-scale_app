@@ -24,8 +24,8 @@ namespace AgCROSScaleApp
             InitializeComponent();
             this.cbxSerialPort.DisplayMember = "DisplayName";
             this.cbxSerialPort.ValueMember = "PortName";
-            this.loadingBoxCtrl1.Image = Properties.Resources.SpinningGIF;
-            this.loadingBoxCtrl1.Visible = false;
+            this.loadingBox1.Visible = false;
+            this.loadingBox2.Visible = false;
             InitialGridSetup();
         }
 
@@ -54,7 +54,7 @@ namespace AgCROSScaleApp
             ws.ColumnHeaders[3].Style.HorizontalAlign = ReoGridHorAlign.Center;
             ws.ColumnHeaders[3].Style.Padding = new PaddingValue(2);
             this.reoGridSheet.Refresh();
-            ws.FocusPos = new CellPosition(ws.MaxContentRow == 0? 0 : ws.MaxContentRow+1, 0);
+            ws.FocusPos = new CellPosition(ws.MaxContentRow == 0 ? 0 : ws.MaxContentRow + 1, 0);
         }
 
         private void reoGridSheet_Resize(object sender, EventArgs e)
@@ -82,7 +82,7 @@ namespace AgCROSScaleApp
             }
             else if (e.Cell.Column == 3)
             {
-                if ((ws[e.Cell.Row, 3] as bool?)??false)
+                if ((ws[e.Cell.Row, 3] as bool?) ?? false)
                 {
                     await TakeReading(ws, e.Cell.Row);
                 }
@@ -97,12 +97,12 @@ namespace AgCROSScaleApp
             var uiDisp = Dispatcher.CurrentDispatcher;
 
             this.reoGridSheet.Enabled = false;
-            this.loadingBoxCtrl1.Visible = true;
+            this.loadingBox2.Visible = true;
             await Task.Run(() =>
             {
                 try
                 {
-                    var reading = vm.TakeReading(row, ws[row,0].ToString());
+                    var reading = vm.TakeReading(row, ws[row, 0].ToString());
                     uiDisp.BeginInvoke((Action)(() =>
                     {
                         ws[row, 1] = reading.ReadingTimeStamp.ToString("O");
@@ -119,7 +119,7 @@ namespace AgCROSScaleApp
 
             });
             this.reoGridSheet.Enabled = true;
-            this.loadingBoxCtrl1.Visible = false;
+            this.loadingBox2.Visible = false;
         }
 
         public void SaveGridToFile()
@@ -153,19 +153,26 @@ namespace AgCROSScaleApp
                     }
                 }
                 Cursor = Cursors.Default;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"Error:{ex.Message}", "Error Setting Up", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private async void btnConnect_Click(object sender, EventArgs e)
         {
             try
             {
                 if (!this.vm.Device?.IsConnected ?? true)
                 {
-                    if (this.vm.ConnectToDevice((SerialPortValue)this.cbxSerialPort.SelectedItem))
+                    this.loadingBox1.Visible = true;
+                    await Task.Run(() =>
+                    {
+                        this.vm.ConnectToDevice((SerialPortValue)this.cbxSerialPort.SelectedItem);
+
+                    });
+                    if (this.vm.Device.IsConnected)
                     {
                         this.btnConnect.Text = "Disconnect";
                         // turn off input boxes and file selection
@@ -181,6 +188,8 @@ namespace AgCROSScaleApp
                         SetupSpreadtool();
                         this.reoGridSheet.Refresh();
                     }
+
+                    this.loadingBox1.Visible = false;
                 }
                 else
                 {
@@ -209,7 +218,7 @@ namespace AgCROSScaleApp
             {
                 MessageBox.Show($"Encounted issue: {ex.Message}", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
         }
 
         private void GridCleanup()
@@ -233,7 +242,7 @@ namespace AgCROSScaleApp
                 ws[idx, 2] = record.ReadingValue;
             }
             var usedRanged = ws.UsedRange;
-            ws[new RangePosition(0, 3, usedRanged.Rows,1)] = Enumerable.Range(0, usedRanged.Rows).Select(o => new CheckBoxCell()).Cast<object>().ToArray(); ;
+            ws[new RangePosition(0, 3, usedRanged.Rows, 1)] = Enumerable.Range(0, usedRanged.Rows).Select(o => new CheckBoxCell()).Cast<object>().ToArray(); ;
 
         }
 

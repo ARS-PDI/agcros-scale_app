@@ -22,7 +22,7 @@
         "Entry"
         {
         "MsmKey" = "8:_0688AB2EC787B8E69E6CAA2BA0EDD514"
-        "OwnerKey" = "8:_8424F52CD4E43760727812D0BD2BAFD0"
+        "OwnerKey" = "8:_44B30068939781799A9530EF3AEB5127"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -33,7 +33,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_571AC11E915BFBB63C6BBF8AD1DA8821"
+        "MsmKey" = "8:_3738A22CCB773671B3B4AF5665289D13"
+        "OwnerKey" = "8:_44B30068939781799A9530EF3AEB5127"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3738A22CCB773671B3B4AF5665289D13"
+        "OwnerKey" = "8:_C00D2390DEBF80E7EB1BBC66F8062092"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3738A22CCB773671B3B4AF5665289D13"
+        "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_44B30068939781799A9530EF3AEB5127"
         "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -51,18 +69,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6720E40EFDA541EB8B4AD77DD0A1DF42"
-        "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6720E40EFDA541EB8B4AD77DD0A1DF42"
-        "OwnerKey" = "8:_8424F52CD4E43760727812D0BD2BAFD0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_68C4D529949448107CF2C5D7EA222A5B"
         "OwnerKey" = "8:_0688AB2EC787B8E69E6CAA2BA0EDD514"
         "MsmSig" = "8:_UNDEFINED"
@@ -75,7 +81,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8424F52CD4E43760727812D0BD2BAFD0"
+        "MsmKey" = "8:_84FBC31543FEC16DCC33FD22E8EA001A"
+        "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_84FBC31543FEC16DCC33FD22E8EA001A"
+        "OwnerKey" = "8:_44B30068939781799A9530EF3AEB5127"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_89D4015FA090AEECFB7485E4C9DE36CC"
         "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -83,6 +101,12 @@
         {
         "MsmKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C00D2390DEBF80E7EB1BBC66F8062092"
+        "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,13 +130,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_571AC11E915BFBB63C6BBF8AD1DA8821"
+        "OwnerKey" = "8:_89D4015FA090AEECFB7485E4C9DE36CC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6720E40EFDA541EB8B4AD77DD0A1DF42"
+        "OwnerKey" = "8:_84FBC31543FEC16DCC33FD22E8EA001A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C00D2390DEBF80E7EB1BBC66F8062092"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3738A22CCB773671B3B4AF5665289D13"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -297,20 +333,51 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_571AC11E915BFBB63C6BBF8AD1DA8821"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3738A22CCB773671B3B4AF5665289D13"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:unvell.ReoGrid, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_571AC11E915BFBB63C6BBF8AD1DA8821"
+                    "_3738A22CCB773671B3B4AF5665289D13"
                     {
-                    "Name" = "8:unvell.ReoGrid.dll"
+                    "Name" = "8:Serilog.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:unvell.ReoGrid.dll"
+            "SourcePath" = "8:Serilog.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_44B30068939781799A9530EF3AEB5127"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:MeasurementEquipment, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_44B30068939781799A9530EF3AEB5127"
+                    {
+                    "Name" = "8:MeasurementEquipment.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:MeasurementEquipment.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
@@ -390,37 +457,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6720E40EFDA541EB8B4AD77DD0A1DF42"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.IO.Ports, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_6720E40EFDA541EB8B4AD77DD0A1DF42"
-                    {
-                    "Name" = "8:System.IO.Ports.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.IO.Ports.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_68C4D529949448107CF2C5D7EA222A5B"
             {
             "AssemblyRegister" = "3:1"
@@ -483,20 +519,82 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8424F52CD4E43760727812D0BD2BAFD0"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_84FBC31543FEC16DCC33FD22E8EA001A"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MeasurementEquipment, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:System.IO.Ports, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8424F52CD4E43760727812D0BD2BAFD0"
+                    "_84FBC31543FEC16DCC33FD22E8EA001A"
                     {
-                    "Name" = "8:MeasurementEquipment.dll"
+                    "Name" = "8:System.IO.Ports.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:MeasurementEquipment.dll"
+            "SourcePath" = "8:System.IO.Ports.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_89D4015FA090AEECFB7485E4C9DE36CC"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:unvell.ReoGrid, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_89D4015FA090AEECFB7485E4C9DE36CC"
+                    {
+                    "Name" = "8:unvell.ReoGrid.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:unvell.ReoGrid.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C00D2390DEBF80E7EB1BBC66F8062092"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Serilog.Sinks.File, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_C00D2390DEBF80E7EB1BBC66F8062092"
+                    {
+                    "Name" = "8:Serilog.Sinks.File.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Serilog.Sinks.File.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
@@ -602,14 +700,14 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AgCROSScaleApp"
         "ProductCode" = "8:{B387277D-165F-4D79-9D82-FDBE967ED2A1}"
-        "PackageCode" = "8:{E1950F2B-38AB-49BB-8E3B-2E568333F5AF}"
+        "PackageCode" = "8:{AF7AFD5C-64C9-454E-BD46-A776C9D9EFA9}"
         "UpgradeCode" = "8:{1D14A5A2-D26C-469E-8B51-664D2279DF36}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.4.0"
         "Manufacturer" = "8:USDA-ARS"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

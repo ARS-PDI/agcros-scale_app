@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,7 @@ namespace MeasurementEquipment.Scales
 {
     public class TestScaleDevice : IScale
     {
+        private ILogger logger = Log.ForContext<TestScaleDevice>();
         public bool IsConnected { get; set; }
         private Random rand;
 
@@ -17,6 +19,7 @@ namespace MeasurementEquipment.Scales
 
         public void Connect()
         {
+            logger.Debug("Test Connection Success");
             IsConnected = true;
         }
 
@@ -32,11 +35,13 @@ namespace MeasurementEquipment.Scales
 
         public double TakeInstantReading()
         {
-            return rand.NextDouble() * 100.0;
+            logger.Debug("Test Instant Reading");
+            return rand.NextDouble() * 100;
         }
 
         public double TakeStableReading()
         {
+            logger.Debug("Test Stable Reading");
             return TakeInstantReading();
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace AgCROSScaleApp
 {
-    partial class LoadingBoxCtrl
+    partial class LoadingBoxControl
     {
         /// <summary> 
         /// Required designer variable.

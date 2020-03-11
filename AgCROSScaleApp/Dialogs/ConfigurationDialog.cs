@@ -18,13 +18,17 @@ namespace AgCROSScaleApp
             this.vm = vm;
             InitializeComponent();
             this.chxTestDevice.Checked = vm.AllowTestDevice;
-            this.txtConnectionTimeout.Text = vm.ConnectTimeout.ToString();
+            this.txtConnectionTimeout.Text = Math.Max(5, vm.ConnectTimeout).ToString();
+            this.chxDebug.Checked = vm.Debug;
+            this.textRetries.Text = vm.NumRetries.ToString();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             vm.AllowTestDevice = this.chxTestDevice.Checked;
-            vm.ConnectTimeout = int.Parse(this.txtConnectionTimeout.Text);
+            vm.ConnectTimeout = Math.Max(5, int.Parse(this.txtConnectionTimeout.Text));
+            vm.Debug = this.chxDebug.Checked;
+            vm.NumRetries = int.Parse(this.textRetries.Text);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

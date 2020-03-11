@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace AgCROSScaleApp
 {
-    public partial class LoadingBoxCtrl : PictureBox
+    public partial class LoadingBoxControl : PictureBox
     {
-        public LoadingBoxCtrl()
+        public LoadingBoxControl()
         {
             InitializeComponent();
             this.BackColor = Color.Transparent;

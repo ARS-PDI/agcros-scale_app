@@ -1,5 +1,6 @@
 ﻿using MeasurementEquipment.Scales;
 using MeasurementEquipment.Types;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +23,7 @@ namespace AgCROSScaleApp
 
     public class ScaleAppViewModel
     {
+        private ILogger logger;
         public List<ScaleReadingValue> Readings { get; set; }
 
         public List<SerialPortValue> SerialPorts { get; set; }
@@ -36,29 +38,67 @@ namespace AgCROSScaleApp
 
         public int ConnectTimeout { get; set; }
 
+        private bool debug;
+
+        public bool Debug
+        {
+            get
+            {
+                return debug;
+            }
+
+            set
+            {
+                if (value)
+                    Program.LoggerSwitch.MinimumLevel = Serilog.Events.LogEventLevel.Debug;
+                else
+                    Program.LoggerSwitch.MinimumLevel = Serilog.Events.LogEventLevel.Warning;
+
+                debug = value;
+            }
+        }
+
+        public int NumRetries { get; set; }
+
         public ScaleAppViewModel()
         {
             var rand = new Random();
             this.AllowTestDevice = false;
+            this.logger = Log.ForContext<ScaleAppViewModel>();
             ReadUserSettings();
         }
 
         private void ReadUserSettings()
         {
+            logger.Debug("Reading User Settings...");
             this.SaveFileName = Properties.Settings.Default.SaveFileName;
             this.AllowTestDevice = Properties.Settings.Default.AllowTestDevice;
             this.SelectedSerialPort = Properties.Settings.Default.LastPortSelected;
             this.ConnectTimeout = Properties.Settings.Default.ConnectTimeout;
-            if (this.ConnectTimeout < 10) this.ConnectTimeout = 10;
+            this.Debug = Properties.Settings.Default.Debug;
+            this.NumRetries = Properties.Settings.Default.NumRetries;
+            if (this.Debug)
+            {
+                Program.LoggerSwitch.MinimumLevel = Serilog.Events.LogEventLevel.Debug;
+            }
+            logger.Debug(
+                "Read User Settings: file:'{file}',testdevice:{testdev},serialport:{portnum},timeout:{tout},debug:{debug}",
+                SaveFileName, AllowTestDevice, SelectedSerialPort?.PortName ?? "", ConnectTimeout, Debug);
             //ReadSavedFile();
         }
 
         internal void SaveState()
         {
+            logger.Debug("Writing User Settings...");
             Properties.Settings.Default.SaveFileName = this.SaveFileName;
             Properties.Settings.Default.AllowTestDevice = this.AllowTestDevice;
             Properties.Settings.Default.LastPortSelected = this.SelectedSerialPort;
             Properties.Settings.Default.ConnectTimeout = this.ConnectTimeout;
+            Properties.Settings.Default.Debug = this.Debug;
+            Properties.Settings.Default.NumRetries = this.NumRetries;
+            logger.Debug(
+    "Saving User Settings: file:'{file}',testdevice:{testdev},serialport:{portnum},timeout:{tout},debug:{debug}",
+    SaveFileName, AllowTestDevice, SelectedSerialPort?.PortName ?? "", ConnectTimeout, Debug);
             Properties.Settings.Default.Save();
             SaveFile();
         }
@@ -104,9 +144,11 @@ namespace AgCROSScaleApp
             if (Constants.NullCOM.Equals(selectedItem))
                 throw new InvalidOperationException("No devices to connect to...");
             this.SelectedSerialPort = selectedItem;
+
             if (selectedItem.PortName.Equals(Constants.TestDevicePortName))
             {
                 this.Device = new TestScaleDevice();
+                logger.Debug("Set up test device");
             }
             else
             {
@@ -120,16 +162,24 @@ namespace AgCROSScaleApp
                         Parity = System.IO.Ports.Parity.Even,
                         StopBits = System.IO.Ports.StopBits.One
                     },
-                    TimeSpan.FromSeconds(60));
+                    TimeSpan.FromSeconds(this.ConnectTimeout),
+                    this.NumRetries);
+                logger.Debug("Set up MS-SICS scale device.");
+                logger.Debug("MS-SICS com settings: {name},Baud:9600,DataBits:8,Handshake:None,Parity:Even,StopBits:1",
+                    selectedItem.PortName);
+
             }
+            logger.Information("Attempting to connect to device of type {devicetype}", this.Device.GetType());
             this.Device.Connect();
             if (this.Device.IsConnected)
             {
                 if (this.Readings == null)
                 {
+                    logger.Debug("Reset readings.");
                     this.Readings = new List<ScaleReadingValue>();
                 }
             }
+            logger.Information("Connected to Device? {connected}", this.Device.IsConnected);
             return this.Device.IsConnected;
         }
 
@@ -137,14 +187,17 @@ namespace AgCROSScaleApp
         {
             if (string.IsNullOrWhiteSpace(this.SaveFileName))
             {
+                logger.Debug("Attempting to read in file: no file selected.");
                 return;
             }
 
             if (!File.Exists(this.SaveFileName))
             {
+                logger.Debug("Attempting to read in file: file does not exist.");
                 return;
             }
             Readings = new List<ScaleReadingValue>();
+            logger.Debug("Attempting to read in file, adding records as they are found...");
             using (var streamReader = new StreamReader(this.SaveFileName))
             {
                 var header = streamReader.ReadLine(); // dumping
@@ -169,8 +222,11 @@ namespace AgCROSScaleApp
 
         public ScaleReadingValue TakeReading(int rowId, string idTxt)
         {
+            logger.Debug("Attempting to take a reading...");
+
             var timestamp = DateTime.Now;
             var reading = this.ReadWeight();
+            logger.Debug("Got a stable weight reading: {reading}", reading);
             ScaleReadingValue srValue;
             if (this.Readings.ElementAtOrDefault(rowId) != null)
             {
@@ -199,6 +255,8 @@ namespace AgCROSScaleApp
 
         public void SaveFile()
         {
+            logger.Debug("Attempting to save readings file...");
+
             if (!string.IsNullOrWhiteSpace(this.SaveFileName) && (Readings != null ? Readings.Count() > 0 : false))
             {
                 using (var streamwriter = new StreamWriter(this.SaveFileName))
@@ -209,17 +267,21 @@ namespace AgCROSScaleApp
                         streamwriter.WriteLine($"{record.RowID},{record.ID},{record.ReadingTimeStamp.ToString("o")},{record.ReadingValue}");
                     }
                 }
+                logger.Debug("wrote to selected file.");
             }
         }
 
         internal string UpdateFileSave(string fileName)
         {
+            logger.Debug("Updating Selected File...");
+
             this.SaveFileName = fileName;
             if (this.Readings == null)
             {
                 this.Readings = new List<ScaleReadingValue>();
             }
             this.Readings.Clear();
+            logger.Debug("File name updated, readings cleared");
             return this.SaveFileName;
         }
     }
