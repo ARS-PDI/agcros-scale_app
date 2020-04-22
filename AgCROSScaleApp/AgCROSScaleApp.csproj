@@ -79,17 +79,29 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ConnectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ConnectionControl.Designer.cs">
+      <DependentUpon>ConnectionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SelectFileControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SelectFileControl.Designer.cs">
+      <DependentUpon>SelectFileControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ConfigurationDialog.cs">
+    <Compile Include="Dialogs\ApplicationOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\ConfigurationDialog.Designer.cs">
-      <DependentUpon>ConfigurationDialog.cs</DependentUpon>
+    <Compile Include="Dialogs\ApplicationOptions.Designer.cs">
+      <DependentUpon>ApplicationOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingBoxControl.cs">
       <SubType>Component</SubType>
@@ -97,6 +109,21 @@
     <Compile Include="Controls\LoadingBoxControl.Designer.cs">
       <DependentUpon>LoadingBoxControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ConnectionSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ConnectionSettings.Designer.cs">
+      <DependentUpon>ConnectionSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\OutputFileSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\OutputFileSettings.Designer.cs">
+      <DependentUpon>OutputFileSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConnectionModel.cs" />
+    <Compile Include="Models\FileSaveConfigurationModel.cs" />
+    <Compile Include="Models\SerializableKeyValuePair.cs" />
     <Compile Include="ScaleAppMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,11 +140,23 @@
     </Compile>
     <Compile Include="Models\ScaleReadingValue.cs" />
     <Compile Include="Models\ScaleAppViewModel.cs" />
+    <EmbeddedResource Include="Controls\ConnectionControl.resx">
+      <DependentUpon>ConnectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SelectFileControl.resx">
+      <DependentUpon>SelectFileControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\ConfigurationDialog.resx">
-      <DependentUpon>ConfigurationDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\ApplicationOptions.resx">
+      <DependentUpon>ApplicationOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ConnectionSettings.resx">
+      <DependentUpon>ConnectionSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\OutputFileSettings.resx">
+      <DependentUpon>OutputFileSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ScaleAppMain.resx">
       <DependentUpon>ScaleAppMain.cs</DependentUpon>

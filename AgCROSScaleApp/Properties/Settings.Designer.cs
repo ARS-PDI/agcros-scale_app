@@ -25,18 +25,6 @@ namespace AgCROSScaleApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SaveFileName {
-            get {
-                return ((string)(this["SaveFileName"]));
-            }
-            set {
-                this["SaveFileName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool AllowTestDevice {
             get {
@@ -60,18 +48,6 @@ namespace AgCROSScaleApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ConnectTimeout {
-            get {
-                return ((int)(this["ConnectTimeout"]));
-            }
-            set {
-                this["ConnectTimeout"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Debug {
             get {
@@ -84,13 +60,35 @@ namespace AgCROSScaleApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int NumRetries {
+        public global::AgCROSScaleApp.Models.FileSaveConfigurationModel ScaleFileSettings {
             get {
-                return ((int)(this["NumRetries"]));
+                return ((global::AgCROSScaleApp.Models.FileSaveConfigurationModel)(this["ScaleFileSettings"]));
             }
             set {
-                this["NumRetries"] = value;
+                this["ScaleFileSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::AgCROSScaleApp.Models.ConnectionModel ConnectionSettings {
+            get {
+                return ((global::AgCROSScaleApp.Models.ConnectionModel)(this["ConnectionSettings"]));
+            }
+            set {
+                this["ConnectionSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PromptZeroReading {
+            get {
+                return ((bool)(this["PromptZeroReading"]));
+            }
+            set {
+                this["PromptZeroReading"] = value;
             }
         }
     }

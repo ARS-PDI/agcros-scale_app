@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AgCROSScaleApp
+namespace AgCROSScaleApp.Controls
 {
     public partial class LoadingBoxControl : PictureBox
     {

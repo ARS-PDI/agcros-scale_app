@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace MeasurementEquipment.Scales
 {
-    public static class MS104TSCommands
+    public static class MTSICSCommands
     {
         public static string ReadSerialNumber => "I4";
         public static int SuccessSerialNumberTokens => 3;
@@ -38,9 +38,9 @@ namespace MeasurementEquipment.Scales
         
     }
 
-    public class MS104TSSerialCom : IScale
+    public class MTSICSSerialDevice : IScale
     {
-        private ILogger logger = Log.ForContext<MS104TSSerialCom>();
+        private ILogger logger = Log.ForContext<MTSICSSerialDevice>();
 
         private Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
         private SerialPort serialConn;
@@ -56,7 +56,7 @@ namespace MeasurementEquipment.Scales
 
         public string ScaleSerialNumber { get; private set; }
 
-        public MS104TSSerialCom(SerialConfiguration serialConfiguration, TimeSpan commTimeOut, int NumRetries = 2)
+        public MTSICSSerialDevice(SerialConfiguration serialConfiguration, TimeSpan commTimeOut, int NumRetries = 2)
         {
             this.serialCfg = serialConfiguration;
             this.commTimeOut = TimeSpan.FromSeconds(Math.Max(commTimeOut.TotalSeconds, 5.0));
@@ -87,7 +87,7 @@ namespace MeasurementEquipment.Scales
 
         private void Wake(TimeSpan timeout)
         {
-            serialConn.WriteLine(MS104TSCommands.CancelCommand);
+            serialConn.WriteLine(MTSICSCommands.CancelCommand);
             logger.Debug("Attempting to wake device with cancel (@)...");
             // wait the timeout, let it do its thing
             waitHandle.WaitOne(timeout);
@@ -144,14 +144,14 @@ namespace MeasurementEquipment.Scales
             try
             {
                 // attempt to wake up the device.
-                Wake(MS104TSCommands.CancelCommandTimeOut);
+                Wake(MTSICSCommands.CancelCommandTimeOut);
                 //SendCommand(MS104TSCommands.PowerScaleOn, MS104TSCommands.SuccessPowerOnTokens, MS104TSCommands.ErrorPoweringOnTheScale);
                 //if (!CheckPowerOnSuccessful())
                 //{
                 //    logger.Debug("PWR command issue. Response: {response}", response);
                 //    throw new Exception("Failed to power on the scale.");
                 //}
-                SendCommand(MS104TSCommands.ReadSerialNumber, MS104TSCommands.SuccessSerialNumberTokens, MS104TSCommands.ErrorReadingSerial);
+                SendCommand(MTSICSCommands.ReadSerialNumber, MTSICSCommands.SuccessSerialNumberTokens, MTSICSCommands.ErrorReadingSerial);
             }
             catch (Exception)
             {
@@ -163,17 +163,17 @@ namespace MeasurementEquipment.Scales
         private void ExtractSerialFromResponse()
         {
             var tokens = response.Split(' ');
-            if (tokens.Length != MS104TSCommands.SuccessSerialNumberTokens)
+            if (tokens.Length != MTSICSCommands.SuccessSerialNumberTokens)
             {
                 throw new Exception("Failed to retrieve serial number");
             }
-            ScaleSerialNumber = tokens[MS104TSCommands.SerialNumberTokenIndex];
+            ScaleSerialNumber = tokens[MTSICSCommands.SerialNumberTokenIndex];
         }
 
         private bool CheckPowerOnSuccessful()
         {
             var tokens = response.Split(' ');
-            if (tokens.Length < MS104TSCommands.SuccessPowerOnTokens)
+            if (tokens.Length < MTSICSCommands.SuccessPowerOnTokens)
             {
                 throw new Exception("Failed to power on the scale.");
             }
@@ -223,30 +223,30 @@ namespace MeasurementEquipment.Scales
         {
             if (!IsConnected)
                 throw new System.IO.IOException("No Connection Present");
-            SendCommand(MS104TSCommands.TakeInstantReading,
-                MS104TSCommands.SuccessInstantReadingTokens,
-                MS104TSCommands.ErrorTakingInstantReading);
+            SendCommand(MTSICSCommands.TakeInstantReading,
+                MTSICSCommands.SuccessInstantReadingTokens,
+                MTSICSCommands.ErrorTakingInstantReading);
             var tokens = response.Split(' ');
-            if (tokens.Length != MS104TSCommands.SuccessInstantReadingTokens)
+            if (tokens.Length != MTSICSCommands.SuccessInstantReadingTokens)
             {
                 throw new Exception("Failed to get reading");
             }
-            return double.Parse(tokens[MS104TSCommands.InstantReadingTokenIndex]);
+            return double.Parse(tokens[MTSICSCommands.InstantReadingTokenIndex]);
         }
 
         public double TakeStableReading()
         {
             if (!IsConnected)
                 throw new System.IO.IOException("No Connection Present");
-            SendCommand(MS104TSCommands.TakeStableReading,
-                MS104TSCommands.SuccessStableReadingTokens,
-                MS104TSCommands.ErrorTakingStableReading);
+            SendCommand(MTSICSCommands.TakeStableReading,
+                MTSICSCommands.SuccessStableReadingTokens,
+                MTSICSCommands.ErrorTakingStableReading);
             var tokens = response.Split(' ');
-            if (tokens.Length != MS104TSCommands.SuccessStableReadingTokens)
+            if (tokens.Length != MTSICSCommands.SuccessStableReadingTokens)
             {
                 throw new Exception("Failed to get reading");
             }
-            return double.Parse(tokens[MS104TSCommands.StableReadingTokenIndex]);
+            return double.Parse(tokens[MTSICSCommands.StableReadingTokenIndex]);
         }
     }
 }

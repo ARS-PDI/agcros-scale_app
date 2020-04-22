@@ -1,4 +1,4 @@
-﻿namespace AgCROSScaleApp
+﻿namespace AgCROSScaleApp.Controls
 {
     partial class LoadingBoxControl
     {
