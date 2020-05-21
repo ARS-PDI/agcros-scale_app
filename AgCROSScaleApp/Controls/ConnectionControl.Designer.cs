@@ -59,9 +59,9 @@
             // 
             this.connectionLoadingBox.BackColor = System.Drawing.Color.Transparent;
             this.connectionLoadingBox.Image = global::AgCROSScaleApp.Properties.Resources.SpinningGIF;
-            this.connectionLoadingBox.Location = new System.Drawing.Point(199, 3);
+            this.connectionLoadingBox.Location = new System.Drawing.Point(185, 0);
             this.connectionLoadingBox.Name = "connectionLoadingBox";
-            this.connectionLoadingBox.Size = new System.Drawing.Size(101, 99);
+            this.connectionLoadingBox.Size = new System.Drawing.Size(96, 100);
             this.connectionLoadingBox.TabIndex = 10;
             this.connectionLoadingBox.TabStop = false;
             // 
@@ -73,7 +73,7 @@
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.cbxSerialPort);
             this.Name = "ConnectionControl";
-            this.Size = new System.Drawing.Size(461, 106);
+            this.Size = new System.Drawing.Size(461, 101);
             ((System.ComponentModel.ISupportInitialize)(this.connectionLoadingBox)).EndInit();
             this.ResumeLayout(false);
 

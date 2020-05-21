@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MeasurementEquipment.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace MeasurementEquipment.Scales
         bool IsConnected { get; }
         void Connect();
         void Disconnect();
-        double TakeStableReading();
-        double TakeInstantReading();
+        IBalanceValidReadingResponse TakeStableReading();
+        IBalanceValidReadingResponse TakeInstantReading();
     }
 }

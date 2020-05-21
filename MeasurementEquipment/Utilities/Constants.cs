@@ -13,5 +13,15 @@ namespace MeasurementEquipment.Utilities
             DisplayName = "No Ports Active",
             PortName = "COM0"
         };
+
+
+        public enum MTSICSUnits
+        {
+            g = 0,
+            kg = 1,
+            mg = 3,
+            ug = 4
+        }
+
     }
 }

@@ -22,7 +22,7 @@
         "Entry"
         {
         "MsmKey" = "8:_0688AB2EC787B8E69E6CAA2BA0EDD514"
-        "OwnerKey" = "8:_F14B61F5AE7B41AF0E6F76F3E2B5FDA8"
+        "OwnerKey" = "8:_44B30068939781799A9530EF3AEB5127"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_3738A22CCB773671B3B4AF5665289D13"
-        "OwnerKey" = "8:_F14B61F5AE7B41AF0E6F76F3E2B5FDA8"
+        "OwnerKey" = "8:_44B30068939781799A9530EF3AEB5127"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -46,6 +46,12 @@
         "Entry"
         {
         "MsmKey" = "8:_3738A22CCB773671B3B4AF5665289D13"
+        "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_44B30068939781799A9530EF3AEB5127"
         "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -81,6 +87,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_84FBC31543FEC16DCC33FD22E8EA001A"
+        "OwnerKey" = "8:_44B30068939781799A9530EF3AEB5127"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_89D4015FA090AEECFB7485E4C9DE36CC"
         "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
         "MsmSig" = "8:_UNDEFINED"
@@ -111,14 +123,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F14B61F5AE7B41AF0E6F76F3E2B5FDA8"
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B28B5A3C2FB4417C8B0425846B9A2D07"
+        "OwnerKey" = "8:_44B30068939781799A9530EF3AEB5127"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -137,12 +149,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C00D2390DEBF80E7EB1BBC66F8062092"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F14B61F5AE7B41AF0E6F76F3E2B5FDA8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -347,6 +353,37 @@
                     }
                 }
             "SourcePath" = "8:Serilog.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_44B30068939781799A9530EF3AEB5127"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:MeasurementEquipment, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_44B30068939781799A9530EF3AEB5127"
+                    {
+                    "Name" = "8:MeasurementEquipment.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:MeasurementEquipment.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
@@ -612,37 +649,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F14B61F5AE7B41AF0E6F76F3E2B5FDA8"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MeasurementEquipment, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F14B61F5AE7B41AF0E6F76F3E2B5FDA8"
-                    {
-                    "Name" = "8:MeasurementEquipment.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:MeasurementEquipment.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -700,20 +706,20 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AgCROSScaleApp"
         "ProductCode" = "8:{B387277D-165F-4D79-9D82-FDBE967ED2A1}"
-        "PackageCode" = "8:{AF7AFD5C-64C9-454E-BD46-A776C9D9EFA9}"
+        "PackageCode" = "8:{4E0336CB-95DB-4393-AD05-8D418547343D}"
         "UpgradeCode" = "8:{1D14A5A2-D26C-469E-8B51-664D2279DF36}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.5.0"
+        "ProductVersion" = "8:1.6.0"
         "Manufacturer" = "8:USDA-ARS"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:AgCROS Scale App"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:CARR Staff"
+        "ARPCONTACT" = "8:PDI Team"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -1249,7 +1255,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B28B5A3C2FB4417C8B0425846B9A2D07"
             {
-            "SourcePath" = "8:..\\AgCROSScaleApp\\obj\\Debug\\AgCROSScaleApp.exe"
+            "SourcePath" = "8:..\\AgCROSScaleApp\\obj\\Release\\AgCROSScaleApp.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_091CDA73F1E4400B84BE55A5F83F6379"

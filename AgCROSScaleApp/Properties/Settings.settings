@@ -11,14 +11,14 @@
     <Setting Name="Debug" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ScaleFileSettings" Type="AgCROSScaleApp.Models.FileSaveConfigurationModel" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="ConnectionSettings" Type="AgCROSScaleApp.Models.ConnectionModel" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PromptZeroReading" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RepeatedSamplingSettings" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

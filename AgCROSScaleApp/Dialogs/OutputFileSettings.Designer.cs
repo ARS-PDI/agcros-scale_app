@@ -90,6 +90,7 @@
             // 
             this.textFileName.Location = new System.Drawing.Point(202, 47);
             this.textFileName.Name = "textFileName";
+            this.textFileName.ReadOnly = true;
             this.textFileName.Size = new System.Drawing.Size(343, 20);
             this.textFileName.TabIndex = 3;
             // 

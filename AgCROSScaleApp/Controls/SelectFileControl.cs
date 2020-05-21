@@ -28,12 +28,13 @@ namespace AgCROSScaleApp.Controls
             SetToolTipForFileName(model);
         }
 
-        public void SetToolTipForFileName(ScaleAppViewModel model)
+        public void SetToolTipForFileName(ScaleAppViewModel model, Color? btnColor = null)
         {
-            txtFileName.Text = Path.GetFileName(model.FileSave.FileName);
-            toolTip1.SetToolTip(txtFileName, model.FileSave.FileName);
+            txtFileName.Text = Path.GetFileName(model.FileSave?.FileName ?? "");
+            btnSelectFile.BackColor = btnColor.HasValue ? btnColor.Value : SystemColors.ControlLight;
+            toolTip1.SetToolTip(txtFileName, model.FileSave?.FileName ?? "");
         }
-                
+
         public event EventHandler SelectFileButtonClicked;
         protected virtual void OnSelectFileButtonClicked(EventArgs e)
         {

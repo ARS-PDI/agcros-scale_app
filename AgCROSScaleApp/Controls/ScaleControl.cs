@@ -13,6 +13,7 @@ using System.IO;
 using unvell.ReoGrid.CellTypes;
 using AgCROSScaleApp.Models;
 using AgCROSScaleApp.Dialogs;
+using AgCROSScaleApp.Utilities;
 
 namespace AgCROSScaleApp.Controls
 {
@@ -21,6 +22,11 @@ namespace AgCROSScaleApp.Controls
     {
         private ScaleAppViewModel vm;
 
+        private static int IDCol = 0;
+        private static int TimestampCol = 1;
+        private static int ReadValCol = 2;
+        private static int UnitCol = 3;
+        private static int RemeasureCol = 4;
 
         public ScaleControl()
         {
@@ -42,14 +48,15 @@ namespace AgCROSScaleApp.Controls
             ResizeGrid();
             var ws = this.reoGridControl.CurrentWorksheet;
             ws.CellDataChanged += Ws_CellDataChanged;
-            ws.SetCols(4);
-            ws.ColumnHeaders[0].Text = "Sample_ID";
-            ws.ColumnHeaders[1].Text = "Sample_time";
-            ws.ColumnHeaders[2].Text = "Sample_measurement";
-            ws.ColumnHeaders[3].Text = "Remeasure?";
-            ws.ColumnHeaders[3].DefaultCellBody = typeof(CheckBoxCell);
-            ws.ColumnHeaders[3].Style.HorizontalAlign = ReoGridHorAlign.Center;
-            ws.ColumnHeaders[3].Style.Padding = new PaddingValue(2);
+            ws.SetCols(5);
+            ws.ColumnHeaders[IDCol].Text = "SampleID";
+            ws.ColumnHeaders[TimestampCol].Text = "Timestamp";
+            ws.ColumnHeaders[ReadValCol].Text = this.vm.FileSave.VariableName;
+            ws.ColumnHeaders[UnitCol].Text = "Units";
+            ws.ColumnHeaders[RemeasureCol].Text = "Remeasure?";
+            ws.ColumnHeaders[RemeasureCol].DefaultCellBody = typeof(CheckBoxCell);
+            ws.ColumnHeaders[RemeasureCol].Style.HorizontalAlign = ReoGridHorAlign.Center;
+            ws.ColumnHeaders[RemeasureCol].Style.Padding = new PaddingValue(2);
             this.reoGridControl.Refresh();
             ws.FocusPos = new CellPosition(ws.MaxContentRow == 0 ? 0 : ws.MaxContentRow + 1, 0);
         }
@@ -62,8 +69,8 @@ namespace AgCROSScaleApp.Controls
         private void ResizeGrid()
         {
             var ws = this.reoGridControl.CurrentWorksheet;
-            ws.SetColumnsWidth(0, 3, (ushort)(reoGridControl.Size.Width * 0.2725));
-            ws.SetColumnsWidth(3, 1, (ushort)(reoGridControl.Size.Width * 0.1502));
+            ws.SetColumnsWidth(0, RemeasureCol-1, (ushort)(reoGridControl.Size.Width * 0.2043));
+            ws.SetColumnsWidth(RemeasureCol, 1, (ushort)(reoGridControl.Size.Width * 0.1502));
         }
 
         internal void GridCleanup()
@@ -76,18 +83,18 @@ namespace AgCROSScaleApp.Controls
 
         private async void Ws_CellDataChanged(object sender, CellEventArgs e)
         {
-            if (e.Cell.Column != 3 && e.Cell.Column != 0)
+            if (e.Cell.Column != RemeasureCol && e.Cell.Column != IDCol)
             {
                 return;
             }
             var ws = this.reoGridControl.CurrentWorksheet;
-            if (e.Cell.Column == 0)
+            if (e.Cell.Column == IDCol)
             {
                 await TakeReading(ws, e.Cell.Row);
             }
-            else if (e.Cell.Column == 3)
+            else if (e.Cell.Column == RemeasureCol)
             {
-                if ((ws[e.Cell.Row, 3] as bool?) ?? false)
+                if ((ws[e.Cell.Row, RemeasureCol] as bool?) ?? false)
                 {
                     await TakeReading(ws, e.Cell.Row);
                 }
@@ -110,7 +117,8 @@ namespace AgCROSScaleApp.Controls
                     var reading = vm.TakeReading(row, ws[row, 0].ToString());
                     uiDisp.BeginInvoke((Action)(() =>
                     {
-                        while (vm.PromptOnZero && Math.Abs(reading.ReadingValue) < ScaleAppViewModel.ZeroEpsilon)
+                        // always 1
+                        while (vm.PromptOnZero && Math.Abs(reading.Samples[0].Value) < AgCROSConstants.ZeroEpsilon)
                         {
                             var res = MessageBox.Show($"Scale read ~0.0...{Environment.NewLine}Do you want to retry the reading?", 
                                 "Reading Prompt", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
@@ -122,9 +130,10 @@ namespace AgCROSScaleApp.Controls
                         }
                         // ok they got a good reading OR don't want to retry: save results.
                         this.vm.SaveReading(reading);
-                        ws[row, 1] = reading.ReadingTimeStamp.ToString("O");
-                        ws[row, 2] = reading.ReadingValue;
-                        ws[row, 3] = false;
+                        ws[row, TimestampCol] = reading.Samples[0].Timestamp.ToString("O");
+                        ws[row, ReadValCol] = reading.Samples[0].Value.ToString();
+                        ws[row, UnitCol] = reading.Samples[0].Units;
+                        ws[row, RemeasureCol] = false;
                         this.vm.SaveFile();
                     }));
                 }
@@ -155,12 +164,14 @@ namespace AgCROSScaleApp.Controls
             for (int idx = 0; idx < this.vm.Readings.Count; idx++)
             {
                 var record = this.vm.Readings[idx];
-                ws[idx, 0] = record.ID;
-                ws[idx, 1] = record.ReadingTimeStamp.ToString("O");
-                ws[idx, 2] = record.ReadingValue;
+                ws[idx, IDCol] = record.ID;
+                ws[idx, TimestampCol] = record.Samples[0].Timestamp.ToString("O");
+                ws[idx, ReadValCol] = record.Samples[0].Value.ToString();
+                ws[idx, UnitCol] = record.Samples[0].Units;
+
             }
             var usedRanged = ws.UsedRange;
-            ws[new RangePosition(0, 3, usedRanged.Rows, 1)] = Enumerable.Range(0, usedRanged.Rows).Select(o => new CheckBoxCell()).Cast<object>().ToArray(); ;
+            ws[new RangePosition(0, RemeasureCol, usedRanged.Rows, 1)] = Enumerable.Range(0, usedRanged.Rows).Select(o => new CheckBoxCell()).Cast<object>().ToArray(); ;
         }
 
 

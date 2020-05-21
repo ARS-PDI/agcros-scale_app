@@ -1,4 +1,6 @@
-﻿using MeasurementEquipment.Scales;
+﻿using AgCROSScaleApp.Utilities;
+using MeasurementEquipment.Models;
+using MeasurementEquipment.Scales;
 using MeasurementEquipment.Types;
 using MeasurementEquipment.Utilities;
 using Serilog;
@@ -11,28 +13,32 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using unvell.ReoGrid.IO.OpenXML.Schema;
 
 namespace AgCROSScaleApp.Models
 {
     public class ScaleAppViewModel
     {
-        public const double ZeroEpsilon = 0.00001;
         private ILogger logger;
-
-        public FileSaveConfigurationModel FileSave { get; set; }
-
+        public FileConfigurationModel FileSave { get; set; }
         public ConnectionModel Connection { get; set; }
+        public ScaleInfoModel ScaleInfo { get; set; }
+        public RepeatedMeasurementModel RepeatMeasures { get; set; }
         public List<ScaleReadingValue> Readings { get; set; }
 
         public List<SerialPortValue> SerialPorts { get; set; }
 
         public SerialPortValue SelectedSerialPort { get; set; }
 
+        public bool FileHasRead { get; set; }
+
         public bool UpdatedRecords { get; set; }
 
         public bool AllowTestDevice { get; set; }
 
         public bool PromptOnZero { get; set; }
+
+        private object fileSaveLock = new object();
 
         private bool debug;
 
@@ -56,8 +62,8 @@ namespace AgCROSScaleApp.Models
 
         public ScaleAppViewModel()
         {
-            var rand = new Random();
             this.AllowTestDevice = false;
+            this.FileHasRead = false;
             this.logger = Log.ForContext<ScaleAppViewModel>();
             ReadUserSettings();
             UpdatedRecords = false;
@@ -69,7 +75,6 @@ namespace AgCROSScaleApp.Models
             this.AllowTestDevice = Properties.Settings.Default.AllowTestDevice;
             this.SelectedSerialPort = Properties.Settings.Default.LastPortSelected;
             this.Debug = Properties.Settings.Default.Debug;
-            this.FileSave = Properties.Settings.Default.ScaleFileSettings ?? new FileSaveConfigurationModel();
             this.Connection = Properties.Settings.Default.ConnectionSettings ?? new ConnectionModel();
             this.PromptOnZero = Properties.Settings.Default.PromptZeroReading;
             if (this.Debug)
@@ -88,7 +93,6 @@ namespace AgCROSScaleApp.Models
             Properties.Settings.Default.AllowTestDevice = this.AllowTestDevice;
             Properties.Settings.Default.LastPortSelected = this.SelectedSerialPort;
             Properties.Settings.Default.Debug = this.Debug;
-            Properties.Settings.Default.ScaleFileSettings = this.FileSave;
             Properties.Settings.Default.ConnectionSettings = this.Connection;
             Properties.Settings.Default.PromptZeroReading = this.PromptOnZero;
             logger.Debug(
@@ -118,7 +122,7 @@ namespace AgCROSScaleApp.Models
             if (Constants.NullCOM.Equals(selectedItem))
                 throw new InvalidOperationException("No devices to connect to...");
             this.SelectedSerialPort = selectedItem;
-            if (Connection.ConnectToDevice(selectedItem))
+            if (Connection.ConnectToDevice(selectedItem, ScaleInfo))
             {
                 if (this.Readings == null)
                 {
@@ -132,13 +136,17 @@ namespace AgCROSScaleApp.Models
 
         internal void SaveReading(ScaleReadingValue record)
         {
-            if (this.Readings.ElementAtOrDefault(record.RowID) != null)
+            var rec = this.Readings.ElementAtOrDefault(record.RowID);
+            if (rec != null)
             {
-                this.Readings[record.RowID].ReadingValue = record.ReadingValue;
-                this.Readings[record.RowID].ReadingTimeStamp = record.ReadingTimeStamp;
+                this.Readings[record.RowID] = record;
             }
             else
             {
+                if (record.RowID == -1)
+                {
+                    record.RowID = this.Readings.Count;
+                }
                 this.Readings.Add(record);
             }
             UpdatedRecords = true;
@@ -147,12 +155,6 @@ namespace AgCROSScaleApp.Models
         public bool DeviceIsConnected()
         {
             return Connection.IsConnected;
-        }
-
-        public void ReadSavedFile()
-        {
-            Readings = FileSave.ReadSavedFile();
-            UpdatedRecords = false;
         }
 
         public ScaleReadingValue TakeReading(int rowId, string idTxt)
@@ -164,46 +166,52 @@ namespace AgCROSScaleApp.Models
             var record = new ScaleReadingValue
             {
                 RowID = rowId,
-                ReadingTimeStamp = timestamp,
-                ReadingValue = reading,
                 ID = idTxt
             };
+            // "new" record, so can just add the reading.
+            record.Samples = new List<TimestampedSample>{
+                new TimestampedSample
+                {
+                    Timestamp = timestamp,
+                    Value = reading.ReadValue,
+                    Units = reading.ReadValueUnits
+                }
+            };
+
             logger.Debug("Got a stable weight reading: {reading}", reading);
             return record;
         }
 
-        public double ReadWeight()
+        public IBalanceValidReadingResponse ReadWeight()
         {
             return this.Connection.TakeStableReading();
         }
 
         public void SaveFile()
         {
-            if ((this.Readings?.Count ?? 0) <= 0)
+            lock (fileSaveLock)
             {
-                logger.Debug("Nothing to save, not generating CSV...");
-                return;
+                if ((this.Readings?.Count ?? 0) <= 0)
+                {
+                    logger.Debug("Nothing to save, not generating CSV...");
+                    return;
+                }
+                if (!UpdatedRecords)
+                { // Dont save file if the grid never showed or added data....
+                    logger.Debug("nothing update, not regenerating CSV...");
+                    return;
+                }
+                logger.Debug("Attempting to save readings file...");
+                FileWriteUtility.SaveFile(this);
             }
-            if (!UpdatedRecords)
-            { // Dont save file if the grid never showed or added data....
-                logger.Debug("nothing update, not regenerating CSV...");
-                return;
-            }
-            logger.Debug("Attempting to save readings file...");
-            this.FileSave.SaveFile(Readings);
         }
 
-        internal string UpdateFileSave(string fileName)
+        public void CreateBackup()
         {
-            logger.Debug("Updating Selected File...");
-            this.FileSave.FileName = fileName;
-            if (this.Readings == null)
+            lock (fileSaveLock)
             {
-                this.Readings = new List<ScaleReadingValue>();
+                BackupFileUtility.CreateBackupFile(this.FileSave.FileName);
             }
-            this.Readings.Clear();
-            logger.Debug("File name updated, readings cleared");
-            return this.FileSave.FileName;
         }
 
         internal void Disconnect()

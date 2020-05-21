@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using MeasurementEquipment.Models;
+using Microsoft.Win32.SafeHandles;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,16 +35,21 @@ namespace MeasurementEquipment.Scales
             // nothing to dispose.
         }
 
-        public double TakeInstantReading()
+        public IBalanceValidReadingResponse TakeInstantReading()
         {
             logger.Debug("Test Instant Reading");
-            return rand.NextDouble() * 100;
+            return new TestBalanceValidReadingResponse(NextDecimal(0, 600));
         }
 
-        public double TakeStableReading()
+        public IBalanceValidReadingResponse TakeStableReading()
         {
             logger.Debug("Test Stable Reading");
-            return TakeInstantReading();
+            return new TestBalanceValidReadingResponse(NextDecimal(0,600));
+        }
+
+        private decimal NextDecimal(int min, int max)
+        {
+            return (decimal) rand.Next(min, max);
         }
     }
 }

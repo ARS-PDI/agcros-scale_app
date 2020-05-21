@@ -1,4 +1,5 @@
-﻿using MeasurementEquipment.Scales;
+﻿using MeasurementEquipment.Models;
+using MeasurementEquipment.Scales;
 using MeasurementEquipment.Types;
 using MeasurementEquipment.Utilities;
 using Serilog;
@@ -37,8 +38,9 @@ namespace AgCROSScaleApp.Models
             StopBits = System.IO.Ports.StopBits.One;
         }
 
-        public bool ConnectToDevice(SerialPortValue selectedItem)
+        public bool ConnectToDevice(SerialPortValue selectedItem, ScaleInfoModel scaleInfo)
         {
+
             if (selectedItem.PortName.Equals(Constants.TestDevicePortName))
             {
                 this.device = new TestScaleDevice();
@@ -57,6 +59,7 @@ namespace AgCROSScaleApp.Models
                         StopBits = StopBits
                     },
                     TimeSpan.FromSeconds(this.ConnectTimeout),
+                    (Constants.MTSICSUnits) scaleInfo.Unit,
                     this.NumRetries);
                 logger.Debug("Set up MS-SICS scale device.");
                 logger.Debug("MS-SICS com settings: {name},Baud:9600,DataBits:8,Handshake:None,Parity:Even,StopBits:1",
@@ -76,7 +79,7 @@ namespace AgCROSScaleApp.Models
             }
         }
 
-        public double TakeStableReading()
+        public IBalanceValidReadingResponse TakeStableReading()
         {
             return this.device.TakeStableReading();
         }

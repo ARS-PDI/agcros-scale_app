@@ -51,6 +51,18 @@ namespace AgCROSScaleApp.Controls
             {
                 if (!this.model.DeviceIsConnected())
                 {
+                    if (!this.model.FileHasRead)
+                    {
+                        // return, need scale configured.
+                        MessageBox.Show("Please configure the output file before connecting.", "Output File Not Configured");
+                        return;
+                    }
+                    if (!this.model.ScaleInfo.ModelIsValid())
+                    {
+                        // return, need scale configured.
+                        MessageBox.Show("Please configure the scale information settings before connecting.", "Scale Info Not Configured");
+                        return;
+                    }
                     this.connectionLoadingBox.Visible = true;
                     if (this.model.ConnectToDevice((SerialPortValue)this.cbxSerialPort.SelectedItem))
                     {

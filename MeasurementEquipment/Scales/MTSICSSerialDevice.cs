@@ -1,4 +1,6 @@
 ﻿using MeasurementEquipment.Configurations;
+using MeasurementEquipment.Models;
+using MeasurementEquipment.Utilities;
 using Serilog;
 using Serilog.Core;
 using System;
@@ -32,10 +34,15 @@ namespace MeasurementEquipment.Scales
         public static int SuccessPowerToken => 1;
         public static string ErrorPoweringOnTheScale => "Error while attempting to power on the scale.";
 
+        public static string SetMTSICSUnits => "M21";
+        public static int SuccessMTSICSUnitsTokens => 2;
+        public static int SuccessMTSICSUnitsToken => 1;
+        public static string ErrorSettingScaleUnits => "Error attempting to set units.";
+
         public static string CancelCommand => "@";
 
         public static TimeSpan CancelCommandTimeOut => TimeSpan.FromSeconds(5);
-        
+
     }
 
     public class MTSICSSerialDevice : IScale
@@ -48,6 +55,7 @@ namespace MeasurementEquipment.Scales
         private TimeSpan commTimeOut;
         private readonly AutoResetEvent waitHandle = new AutoResetEvent(false);
         private string response;
+        private Utilities.Constants.MTSICSUnits? unit;
 
         public bool IsConnected => serialConn?.IsOpen ?? false;
 
@@ -56,9 +64,16 @@ namespace MeasurementEquipment.Scales
 
         public string ScaleSerialNumber { get; private set; }
 
-        public MTSICSSerialDevice(SerialConfiguration serialConfiguration, TimeSpan commTimeOut, int NumRetries = 2)
+
+        public MTSICSSerialDevice(
+            SerialConfiguration serialConfiguration,
+            TimeSpan commTimeOut,
+            // default is grams, if this is null, don't change units.
+            Utilities.Constants.MTSICSUnits? unit,
+            int NumRetries = 2)
         {
             this.serialCfg = serialConfiguration;
+            this.unit = unit;
             this.commTimeOut = TimeSpan.FromSeconds(Math.Max(commTimeOut.TotalSeconds, 5.0));
             NumberOfRetries = NumRetries;
         }
@@ -120,6 +135,10 @@ namespace MeasurementEquipment.Scales
                 try
                 {
                     GetSerialNumber();
+                    if (unit.HasValue)
+                    {
+                        SetMTSICSUnits();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -130,13 +149,39 @@ namespace MeasurementEquipment.Scales
             }
         }
 
+        private void SetMTSICSUnits()
+        {
+            try
+            {
+                var command = $"{MTSICSCommands.SetMTSICSUnits} 0 {(int)unit}";
+                SendCommand(command, MTSICSCommands.SuccessMTSICSUnitsTokens, MTSICSCommands.ErrorSettingScaleUnits);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            var tokens = response.Split(' ');
+            if (!tokens[MTSICSCommands.SuccessMTSICSUnitsToken].Contains("A"))
+            {
+                throw new Exception(MTSICSCommands.ErrorSettingScaleUnits);
+            }
+        }
+
         private void SerialConn_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             if (!serialConn.IsOpen)
                 return;
-            response = regex.Replace(serialConn.ReadLine(), " ");
-            logger.Debug("Received: {Response}", response);
-            waitHandle.Set();
+            try
+            {
+                response = regex.Replace(serialConn.ReadLine(), " ");
+                logger.Debug("Received: {Response}", response);
+                waitHandle.Set();
+            } 
+            catch (Exception ex)
+            {
+                logger.Error($"{ex.Message}");
+            }
+
         }
 
         private void GetSerialNumber()
@@ -170,29 +215,10 @@ namespace MeasurementEquipment.Scales
             ScaleSerialNumber = tokens[MTSICSCommands.SerialNumberTokenIndex];
         }
 
-        private bool CheckPowerOnSuccessful()
-        {
-            var tokens = response.Split(' ');
-            if (tokens.Length < MTSICSCommands.SuccessPowerOnTokens)
-            {
-                throw new Exception("Failed to power on the scale.");
-            }
-            // TODO: clean this up with constants
-            string cmd = tokens[0];
-            string res = tokens[1].TrimEnd('\r', '\n');
-            logger.Debug("PWR command tokens: cmd-{cmd}, response-{res}", cmd, res);
-            if (!cmd.Equals("PWR")) 
-                return false;
-            if (!res.Equals("L") && !res.Equals("A")) 
-                return false;
-            // got an L or A, response was good.
-            return true;
-        }
-
         private void SendCommand(string command, int responseLength, string errorMessage)
         {
             // at least one attempt, otherwise include number of retries.
-            for (int attempt = 0; attempt < NumberOfRetries + 1; attempt++) 
+            for (int attempt = 0; attempt < NumberOfRetries + 1; attempt++)
             {
                 if (ReadWrite(command, responseLength))
                 {
@@ -219,34 +245,24 @@ namespace MeasurementEquipment.Scales
         }
 
 
-        public double TakeInstantReading()
+        public IBalanceValidReadingResponse TakeInstantReading()
         {
             if (!IsConnected)
                 throw new System.IO.IOException("No Connection Present");
             SendCommand(MTSICSCommands.TakeInstantReading,
                 MTSICSCommands.SuccessInstantReadingTokens,
                 MTSICSCommands.ErrorTakingInstantReading);
-            var tokens = response.Split(' ');
-            if (tokens.Length != MTSICSCommands.SuccessInstantReadingTokens)
-            {
-                throw new Exception("Failed to get reading");
-            }
-            return double.Parse(tokens[MTSICSCommands.InstantReadingTokenIndex]);
+            return new MTSICSBalanceValidReadingResponse(response);
         }
 
-        public double TakeStableReading()
+        public IBalanceValidReadingResponse TakeStableReading()
         {
             if (!IsConnected)
                 throw new System.IO.IOException("No Connection Present");
             SendCommand(MTSICSCommands.TakeStableReading,
                 MTSICSCommands.SuccessStableReadingTokens,
                 MTSICSCommands.ErrorTakingStableReading);
-            var tokens = response.Split(' ');
-            if (tokens.Length != MTSICSCommands.SuccessStableReadingTokens)
-            {
-                throw new Exception("Failed to get reading");
-            }
-            return double.Parse(tokens[MTSICSCommands.StableReadingTokenIndex]);
+            return new MTSICSBalanceValidReadingResponse(response);
         }
     }
 }
