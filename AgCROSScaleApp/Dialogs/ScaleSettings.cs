@@ -23,6 +23,7 @@ namespace AgCROSScaleApp.Dialogs
             foreach (var item in ScaleInfoModel.InterfaceOptions)
             {
                 comboInterface.Items.Add(item);
+                comboInterface.DisplayMember = "ListName";
             }
             if (this.vm.AllowTestDevice)
             {
@@ -38,7 +39,7 @@ namespace AgCROSScaleApp.Dialogs
                 this.txtModel.Text = scaleInfo.Model;
                 this.txtReadability.Text = scaleInfo.Readabilitymg?.ToString();
                 this.txtRepeatability.Text = scaleInfo.Repeatabilitymg?.ToString();
-                this.comboUnits.SelectedIndex = this.comboUnits.Items.IndexOf((Constants.MTSICSUnits)(scaleInfo.Unit ?? -1));
+                this.comboUnits.SelectedIndex = this.comboUnits.Items.IndexOf((Constants.ScaleUnits)(scaleInfo.Unit ?? -1));
                 comboInterface.SelectedIndex = comboInterface.Items.IndexOf(scaleInfo.ConnectionInterface);
             }
         }

@@ -1,21 +1,19 @@
-﻿using AgCROSScaleApp.Utilities;
-using MeasurementEquipment.Utilities;
-using Serilog;
+﻿using AgCROSScaleApp.Models.Types;
+using AgCROSScaleApp.Utilities;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Management.Instrumentation;
-using System.Text;
-using System.Windows.Forms;
 
 namespace AgCROSScaleApp.Models
 {
+
     [Serializable]
     public class FileConfigurationModel
     {
         public string FileName { get; set; }
         public string VariableName { get; set; }
+
+        public FileTypes FileType { get; set; }
         [IgnoreMember]
         public List<KeyValuePair<string, string>> MetaData { get; set; }
 

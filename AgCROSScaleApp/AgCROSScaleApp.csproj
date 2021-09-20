@@ -85,6 +85,12 @@
     <Compile Include="Controls\ConnectionControl.Designer.cs">
       <DependentUpon>ConnectionControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ScaleControlCalculation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ScaleControlCalculation.Designer.cs">
+      <DependentUpon>ScaleControlCalculation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ScaleControlRepetitions.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -121,6 +127,12 @@
     <Compile Include="Dialogs\ConnectionSettings.Designer.cs">
       <DependentUpon>ConnectionSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\OutputCalculator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\OutputCalculator.Designer.cs">
+      <DependentUpon>OutputCalculator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\RepeatedMeasurementOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,8 +163,18 @@
     <Compile Include="Dialogs\ScaleSettings.Designer.cs">
       <DependentUpon>ScaleSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\CalcGridResults.cs" />
+    <Compile Include="Models\CalculationModel.cs" />
+    <Compile Include="Models\CalculationResultModel.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
+    <Compile Include="Models\Types\AppTypes.cs" />
+    <Compile Include="Models\Types\FileTypes.cs" />
+    <Compile Include="Models\Types\SampleTypes.cs" />
     <Compile Include="Utilities\AgCROSConstants.cs" />
+    <Compile Include="Utilities\DecimalUtils.cs" />
+    <Compile Include="Utilities\EnumExtensions.cs" />
+    <Compile Include="Utilities\FileReaderWriters\ReadCalculatedResultsFile.cs" />
+    <Compile Include="Utilities\FileReaderWriters\WriteCalculatedResultsFile.cs" />
     <Compile Include="Utilities\FileReadUtility.cs" />
     <Compile Include="Models\FileConfigurationModel.cs" />
     <Compile Include="Models\RepeatedMeasurementModel.cs" />
@@ -179,6 +201,10 @@
     <EmbeddedResource Include="Controls\ConnectionControl.resx">
       <DependentUpon>ConnectionControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ScaleControlCalculation.resx">
+      <DependentUpon>ScaleControlCalculation.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ScaleControlRepetitions.resx">
       <DependentUpon>ScaleControlRepetitions.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -194,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ConnectionSettings.resx">
       <DependentUpon>ConnectionSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\OutputCalculator.resx">
+      <DependentUpon>OutputCalculator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\RepeatedMeasurementOptions.resx">
       <DependentUpon>RepeatedMeasurementOptions.cs</DependentUpon>

@@ -1,4 +1,5 @@
 ﻿using AgCROSScaleApp.Models;
+using AgCROSScaleApp.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,17 +17,52 @@ namespace AgCROSScaleApp.Utilities
             {
                 WriteMetadata(streamwriter, model.FileSave.MetaData);
                 WriteConfigInfo(streamwriter, model);
-                if (model.RepeatMeasures.NumMeasurements <= 1)
+                switch (model.FileSave.FileType)
                 {
-                    WriteSimpleHeader(streamwriter, model.FileSave.VariableName);
-                    WriteSimpleRecords(streamwriter, model.Readings);
-                }
-                else
-                {
-                    WriteRepeatMeasureHeader(streamwriter, model.FileSave.VariableName, model.Readings.Count);
-                    WriteRepeatMeasureRecords(streamwriter, model.Readings);
+                    case FileTypes.SingleReading:
+                        WriteSimpleHeader(streamwriter, model.FileSave.VariableName);
+                        WriteSimpleRecords(streamwriter, model.Readings);
+                        break;
+                    case FileTypes.MultiReading:
+                        WriteRepeatMeasureHeader(streamwriter, model.FileSave.VariableName, model.Readings.Count);
+                        WriteRepeatMeasureRecords(streamwriter, model.Readings);
+                        break;
+                    case FileTypes.CalculatedValue:
+                        WriteCalculatedValueHeader(streamwriter, model.FileSave.VariableName);
+                        WriteCalculatedValueRecords(streamwriter, model.CalcModel);
+
+                        break;
+                    default: // TODO: throw exception?
+                        break;
                 }
             }
+        }
+
+        private static void WriteCalculatedValueRecords(StreamWriter streamwriter, CalculationModel calcModel)
+        {
+            foreach (var record in calcModel.GridResults)
+            {
+                streamwriter.WriteLine(
+                    $"{record.Key},{record.Value}");
+            }
+        }
+
+        private static void WriteCalculatedValueHeader(StreamWriter streamwriter, string variableName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("id").Append(",");
+            sb.Append("tare_sample_time").Append(",");
+            sb.Append($"tare_\"{variableName}\"").Append(",");
+            sb.Append("tare_units").Append(",");
+            sb.Append("preprocess_sample_time").Append(",");
+            sb.Append($"preprocess_{variableName}").Append(",");
+            sb.Append("preprocess_units").Append(",");
+            sb.Append("postprocess_sample_time").Append(",");
+            sb.Append($"postprocess_{variableName}").Append(",");
+            sb.Append("postprocess_units").Append(",");
+            sb.Append($"calculated_value").Append(",");
+            sb.Append("calculation_errors");
+            streamwriter.WriteLine($"{sb}");
         }
 
         private static void WriteMetadata(StreamWriter streamwriter, List<Models.KeyValuePair<string, string>> metaData)
@@ -48,9 +84,19 @@ namespace AgCROSScaleApp.Utilities
             streamwriter.WriteLine(AgCROSConstants.FileCfgConstants.ScaleAPPConfigSectionStart);
 
             // write RMM
+            streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgFileType}: {model.FileSave.FileType}");
+            streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgAppType}: {model.AppType}");
+            WriteScaleCalcModel(streamwriter, model.CalcModel);
+
             WriteRepeatMeasurementSection(streamwriter, model.RepeatMeasures);
             WriteScaleInfoSection(streamwriter, model.ScaleInfo);
             streamwriter.WriteLine(AgCROSConstants.FileCfgConstants.ScaleAPPConfigSectionEnd);
+        }
+
+        private static void WriteScaleCalcModel(StreamWriter streamwriter, CalculationModel calcModel)
+        {
+            streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgCMTolMin}: {calcModel.MinTolerance}");
+            streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgCMTolMax}: {calcModel.MaxTolerance}");
         }
 
         private static void WriteScaleInfoSection(StreamWriter streamwriter, ScaleInfoModel scaleInfo)
@@ -59,7 +105,7 @@ namespace AgCROSScaleApp.Utilities
             streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgSIMModel}: {scaleInfo.Model}");
             if (scaleInfo.ConnectionInterface.Contains("MT-SICS"))
             {
-                streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgSIMUnits}: MT-SICS {(MeasurementEquipment.Utilities.Constants.MTSICSUnits)scaleInfo.Unit}");
+                streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgSIMUnits}: MT-SICS {(MeasurementEquipment.Utilities.Constants.ScaleUnits)scaleInfo.Unit}");
             }
             streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgSIMReadability}: {scaleInfo.Readabilitymg}");
             streamwriter.WriteLine($"{AgCROSConstants.FileCfgConstants.ScaleCfgSIMRepeatability}: {scaleInfo.Repeatabilitymg}");
@@ -82,9 +128,7 @@ namespace AgCROSScaleApp.Utilities
                 streamWriter.WriteLine(
                     $"{record.RowID}," +
                     $"{record.ID}," +
-                    $"{record.Samples[0].Timestamp:o}," +
-                    $"{record.Samples[0].Value}," +
-                    $"{record.Samples[0].Units}");
+                    $"{record.Samples[0]}");
             }
         }
 
@@ -115,7 +159,7 @@ namespace AgCROSScaleApp.Utilities
                 sb.Append(record.StdDev).Append(",");
                 var recString = string.Join(",",
                     record.Samples.Select(
-                        o => string.Join(",", o.Timestamp.ToString("o"), o.Value, $"\"{o.Units}\"")));
+                        o => string.Join(",", o)));
                 sb.Append(recString);
                 streamwriter.WriteLine(sb.ToString());
             }

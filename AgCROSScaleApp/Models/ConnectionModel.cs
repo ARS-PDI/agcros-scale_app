@@ -59,7 +59,7 @@ namespace AgCROSScaleApp.Models
                         StopBits = StopBits
                     },
                     TimeSpan.FromSeconds(this.ConnectTimeout),
-                    (Constants.MTSICSUnits) scaleInfo.Unit,
+                    (Constants.ScaleUnits) scaleInfo.Unit,
                     this.NumRetries);
                 logger.Debug("Set up MS-SICS scale device.");
                 logger.Debug("MS-SICS com settings: {name},Baud:9600,DataBits:8,Handshake:None,Parity:Even,StopBits:1",

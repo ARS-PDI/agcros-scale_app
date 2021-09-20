@@ -122,7 +122,7 @@ namespace AgCROSScaleApp.Dialogs
                 }
                 return reading;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Error taking reading...");
             }

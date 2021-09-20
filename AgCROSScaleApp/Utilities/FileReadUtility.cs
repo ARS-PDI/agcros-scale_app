@@ -1,4 +1,5 @@
-﻿using AgCROSScaleApp.Utilities;
+﻿using AgCROSScaleApp.Models.Types;
+using AgCROSScaleApp.Utilities;
 using MeasurementEquipment.Utilities;
 using Serilog;
 using System;
@@ -25,6 +26,7 @@ namespace AgCROSScaleApp.Models
             {
                 FileName = fileName
             };
+            model.CalcModel = new CalculationModel();
             // if file exists, read all the info in
             // Otherwise -> start fresh.
             if (File.Exists(fileName))
@@ -35,34 +37,68 @@ namespace AgCROSScaleApp.Models
                     var line = ReadMetadata(streamReader, model.FileSave);
                     line = ReadAppConfigSection(streamReader, model, line);
                     var numMeasurements = model.RepeatMeasures.NumMeasurements;
-                    model.FileSave.VariableName = ReadCustomVariableName(line, numMeasurements > 1);
+                    model.FileSave.VariableName = ReadCustomVariableName(line, model.FileSave.FileType);
                     // last line should be header
                     while (!streamReader.EndOfStream)
                     {
                         var tokenLine = streamReader.ReadLine().Split(',');
                         if (tokenLine.Length > 3)
                         {
-                            var reading = new ScaleReadingValue
+                            if (model.FileSave.FileType == FileTypes.CalculatedValue)
                             {
-                                RowID = int.Parse(tokenLine[0]),
-                                ID = tokenLine[1],
-                                RepeatMeasurement = false,
-                                Samples = new List<TimestampedSample>()
-                            };
-                            if (numMeasurements <= 1)
-                            {
-                                reading.Samples.Add(ReadSingleMeasurementData(tokenLine));
+                                ReadCalculationFileType(model.CalcModel, tokenLine);
                             }
                             else
                             {
-                                ReadRepeatedSampleData(tokenLine, reading, numMeasurements.Value);
+                                var reading = new ScaleReadingValue
+                                {
+                                    RowID = int.Parse(tokenLine[0]),
+                                    ID = tokenLine[1],
+                                    RepeatMeasurement = false,
+                                    Samples = new List<TimestampedSample>()
+                                };
 
+                                switch (model.FileSave.FileType)
+                                {
+                                    case FileTypes.SingleReading:
+                                        reading.Samples.Add(ReadSingleMeasurementData(tokenLine));
+                                        break;
+                                    case FileTypes.MultiReading:
+                                        ReadRepeatedSampleData(tokenLine, reading, numMeasurements.Value);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                model.Readings.Add(reading);
                             }
-                            model.Readings.Add(reading);
+
                         }
                     }
                 }
             }
+        }
+
+        private static void ReadCalculationFileType(CalculationModel cm, string[] tokenLine)
+        {
+            var id = tokenLine[0];
+            var newGridRes = new GridCalcModel()
+            {
+                PostWtRow = -1,
+                PreWtRow = -1,
+                TareWtRow = -1
+            };
+
+            if (tokenLine.Length > 1)
+            {
+                newGridRes.TareWt = CreateTimestampedSample(tokenLine, 1, 2, 3);
+                newGridRes.PreWt = CreateTimestampedSample(tokenLine, 4, 5, 6);
+                newGridRes.PostWt = CreateTimestampedSample(tokenLine, 7, 8, 9);
+                newGridRes.CalcValue = TryParseDecimalToken(tokenLine, 10);
+                newGridRes.CalcValueError = tokenLine[11].Trim();
+            }
+
+            // will overwrite dups, which won't work for this app...
+            cm.GridResults[id] = newGridRes;
         }
 
         private static TimestampedSample ReadSingleMeasurementData(string[] tokenLine)
@@ -72,10 +108,18 @@ namespace AgCROSScaleApp.Models
 
         private static TimestampedSample CreateTimestampedSample(string[] tokenLine, int dateIndex, int valueIndex, int unitIndex)
         {
+            if (string.IsNullOrWhiteSpace(tokenLine[dateIndex])
+                && string.IsNullOrWhiteSpace(tokenLine[valueIndex])
+                && string.IsNullOrWhiteSpace(tokenLine[unitIndex].Trim('"')))
+            {
+                return null;
+            }
+            DateTime date = (!string.IsNullOrWhiteSpace(tokenLine[dateIndex])) ? DateTime.Parse(tokenLine[dateIndex]) : default;
+            var value = TryParseDecimalToken(tokenLine, valueIndex) ?? default;
             return new TimestampedSample()
             {
-                Timestamp = DateTime.Parse(tokenLine[dateIndex]),
-                Value = decimal.Parse(tokenLine[valueIndex]),
+                Timestamp = date,
+                Value = value,
                 Units = tokenLine[unitIndex].Trim('"')
             };
         }
@@ -124,7 +168,23 @@ namespace AgCROSScaleApp.Models
                 {
                     line = streamReader.ReadLine();
                     var tokens = line.Split(':');
-                    if (line.Contains(AgCROSConstants.FileCfgConstants.ScaleCfgRMMRepsKey))
+                    if (line.Contains(AgCROSConstants.FileCfgConstants.ScaleCfgFileType))
+                    {
+                        model.FileSave.FileType = (FileTypes)Enum.Parse(typeof(FileTypes), tokens[1]);
+                    }
+                    else if (line.Contains(AgCROSConstants.FileCfgConstants.ScaleCfgAppType))
+                    {
+                        model.AppType = (AppTypes)Enum.Parse(typeof(AppTypes), tokens[1]);
+                    }
+                    else if (line.Contains(AgCROSConstants.FileCfgConstants.ScaleCfgCMTolMin))
+                    {
+                        model.CalcModel.MinTolerance = TryParseDecimalToken(tokens, 1);
+                    }
+                    else if (line.Contains(AgCROSConstants.FileCfgConstants.ScaleCfgCMTolMax))
+                    {
+                        model.CalcModel.MaxTolerance = TryParseDecimalToken(tokens, 1);
+                    }
+                    else if (line.Contains(AgCROSConstants.FileCfgConstants.ScaleCfgRMMRepsKey))
                     {
                         model.RepeatMeasures.NumMeasurements = int.Parse(tokens[1]);
                     }
@@ -141,7 +201,7 @@ namespace AgCROSScaleApp.Models
                         var subTokens = tokens[1].Trim().Split(' ');
                         if (subTokens[0].Trim().Contains("MT-SICS"))
                         {
-                            model.ScaleInfo.Unit = (int)Enum.Parse(typeof(Constants.MTSICSUnits), subTokens[1].Trim(), true);
+                            model.ScaleInfo.Unit = (int)Enum.Parse(typeof(Constants.ScaleUnits), subTokens[1].Trim(), true);
                         }
                     }
                     else if (line.Contains(AgCROSConstants.FileCfgConstants.ScaleCfgSIMModel))
@@ -175,25 +235,32 @@ namespace AgCROSScaleApp.Models
             return null;
         }
 
-        public static string ReadCustomVariableName(string line, bool reps)
+        public static string ReadCustomVariableName(string line, FileTypes type)
         {
             var tokens = line.Split(',');
-            if (!reps)
+
+            switch (type)
             {
-                // no reps, see if there is data and 
-                if (tokens.Length > 3)
-                {
-                    return tokens[3].Trim('"');
-                }
+                case FileTypes.SingleReading:
+                    if (tokens.Length > 3)
+                    {
+                        return tokens[3].Trim('"');
+                    }
+                    break;
+                case FileTypes.MultiReading:
+                    if (tokens.Length >= 5)
+                    {
+                        return tokens[5].Trim('"').Split('[')[0];
+                    }
+                    break;
+                case FileTypes.CalculatedValue:
+                    if (tokens.Length >= 5)
+                    {
+                        return tokens[2].Trim('"').Split('_')[1].Trim('"');
+                    }
+                    break;
             }
-            // repeated measurements, take first var name and return it.
-            else
-            {
-                if (tokens.Length >= 5)
-                {
-                    return tokens[5].Trim('"').Split('[')[0];
-                }
-            }
+
             return AgCROSConstants.FileCfgConstants.DefaultVarName;
         }
     }

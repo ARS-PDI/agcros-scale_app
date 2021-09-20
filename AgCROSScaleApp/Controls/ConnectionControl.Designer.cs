@@ -31,6 +31,7 @@
             this.btnConnect = new System.Windows.Forms.Button();
             this.cbxSerialPort = new System.Windows.Forms.ComboBox();
             this.connectionLoadingBox = new AgCROSScaleApp.Controls.LoadingBoxControl();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.connectionLoadingBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,6 +66,18 @@
             this.connectionLoadingBox.TabIndex = 10;
             this.connectionLoadingBox.TabStop = false;
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Location = new System.Drawing.Point(38, 73);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(375, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Note: data is saved after every reading and on close to the indicated save file.";
+            // 
             // ConnectionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -72,10 +85,12 @@
             this.Controls.Add(this.connectionLoadingBox);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.cbxSerialPort);
+            this.Controls.Add(this.label1);
             this.Name = "ConnectionControl";
             this.Size = new System.Drawing.Size(461, 101);
             ((System.ComponentModel.ISupportInitialize)(this.connectionLoadingBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -84,5 +99,6 @@
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.ComboBox cbxSerialPort;
         private LoadingBoxControl connectionLoadingBox;
+        private System.Windows.Forms.Label label1;
     }
 }

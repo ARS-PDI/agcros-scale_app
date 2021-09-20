@@ -35,10 +35,15 @@ namespace AgCROSScaleApp.Models
             return valid;
         }
 
-        public static readonly List<string> InterfaceOptions =
-            new List<string>() {
-                "MT-SICS"
+        public static readonly List<ScaleInfoConfig> InterfaceOptions =
+            new List<ScaleInfoConfig>() {
+                new ScaleInfoConfig { ListName = "MT-SICS"},
+                new ScaleInfoConfig { ListName = "OHAUSAdventurer2004"}
             };
+    }
 
+    public class ScaleInfoConfig
+    {
+        public string ListName { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AgCROSScaleApp.Models;
+using AgCROSScaleApp.Models.Types;
 using AgCROSScaleApp.Utilities;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,12 @@ namespace AgCROSScaleApp.Dialogs
                 FileSave = model.FileSave,
                 RepeatMeasures = model.RepeatMeasures,
                 Readings = model.Readings,
-                ScaleInfo = model.ScaleInfo
+                ScaleInfo = model.ScaleInfo,
+                AppType = model.AppType,
+                CalcModel = model.CalcModel ?? new CalculationModel()
             };
+            this.cbxOutputType.DataSource = Enum.GetValues(typeof(AppTypes)).Cast<AppTypes>().Select(o => new { Name = o.GetDescription(), Value = o }).ToList();
+            this.cbxOutputType.DisplayMember = "Name";
             SetFieldValues(model.FileSave?.FileName ?? "");
         }
 
@@ -36,6 +41,19 @@ namespace AgCROSScaleApp.Dialogs
             {
                 model.FileSave.VariableName = textVariableName.Text;
             }
+
+            model.AppType = ((dynamic)cbxOutputType.SelectedItem).Value;
+            if (model.AppType != AppTypes.NoCalculation)
+            {
+                model.RepeatMeasures = new RepeatedMeasurementModel()
+                {
+                    NumMeasurements = 1
+                };
+
+                model.CalcModel.MinTolerance = numMin.Value;
+                model.CalcModel.MaxTolerance = numMax.Value;
+            }
+
             if (!string.IsNullOrEmpty(textMetadata.Text))
             {
                 model.FileSave.MetaData = textMetadata.Text.
@@ -73,6 +91,7 @@ namespace AgCROSScaleApp.Dialogs
                 {
                     FileName = saveFileDialog.FileName
                 };
+                model.CalcModel = new CalculationModel();
                 SetFieldValues(saveFileDialog.FileName);
             }
         }
@@ -105,6 +124,28 @@ namespace AgCROSScaleApp.Dialogs
             {
                 this.textMetadata.Text = "";
             }
+            this.cbxOutputType.SelectedIndex = this.cbxOutputType.FindStringExact(model.AppType.GetDescription());
+            TriggerSpecialCalcOptions((AppTypes)((dynamic)this.cbxOutputType.SelectedItem).Value);
+        }
+
+        private void TriggerSpecialCalcOptions(AppTypes type)
+        {
+            if (type != AppTypes.NoCalculation)
+            {
+                labelMin.Enabled = labelMax.Enabled = true;
+                labelMin.Visible = labelMax.Visible = true;
+                numMin.Enabled = numMax.Enabled = true;
+                numMin.Visible = numMax.Visible = true;
+                numMin.Value = this.model.CalcModel?.MinTolerance ?? 0.0m;
+                numMax.Value = this.model.CalcModel?.MaxTolerance ?? 100.0m;
+            }
+            else
+            {
+                labelMin.Enabled = labelMax.Enabled = false;
+                labelMin.Visible = labelMax.Visible = false;
+                numMin.Enabled = numMax.Enabled = false;
+                numMin.Visible = numMax.Visible = false;
+            }
         }
 
         private void buttonOpenExistingFile_Click(object sender, EventArgs e)
@@ -120,6 +161,11 @@ namespace AgCROSScaleApp.Dialogs
                 SetupApplication(openFileDialog.FileName);
                 // update metadata
             }
+        }
+
+        private void cbxOutputType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TriggerSpecialCalcOptions((AppTypes)((dynamic)this.cbxOutputType.SelectedItem).Value);
         }
     }
 }

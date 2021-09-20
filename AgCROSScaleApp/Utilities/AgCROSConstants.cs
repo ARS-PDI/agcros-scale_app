@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AgCROSScaleApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,15 @@ namespace AgCROSScaleApp.Utilities
         public class FileCfgConstants
         {
             public const string DefaultVarName = "SampleValue";
+
+            public const string ScaleCfgFileType = "cfg.file.type";
+            public const string ScaleCfgAppType = "cfg.app.type";
+
+            // CalcModel Section
+            public const string ScaleCfgCMTolMin = "cm.tolerance.min";
+            public const string ScaleCfgCMTolMax = "cm.tolerance.max";
+
+
             // Config section delimiter
             public const string ScaleAPPConfigSectionStart = "scaleapp.config.start";
             public const string ScaleAPPConfigSectionEnd = "scaleapp.config.end";

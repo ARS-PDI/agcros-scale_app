@@ -45,7 +45,7 @@ namespace AgCROSScaleApp.Controls
             ConnectButtonClicked?.Invoke(this, e);
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private async void btnConnect_Click(object sender, EventArgs e)
         {
             try
             {
@@ -64,16 +64,20 @@ namespace AgCROSScaleApp.Controls
                         return;
                     }
                     this.connectionLoadingBox.Visible = true;
-                    if (this.model.ConnectToDevice((SerialPortValue)this.cbxSerialPort.SelectedItem))
+                    var spv = (SerialPortValue)this.cbxSerialPort.SelectedItem;
+                    var connected = false;
+                    await Task.Run(() =>
+                      {
+                          connected = this.model.ConnectToDevice(spv);
+                      });
+                    if (connected)
                     {
                         this.btnConnect.Text = "Disconnect";
                         // turn off input boxes and file selection
                         this.cbxSerialPort.Enabled = false;
-
                         // have the form tell everyone else to lock down or show up based on state of model.
                         OnConnectButtonClicked(e);
                     }
-                    this.connectionLoadingBox.Visible = false;
                 }
                 else
                 {

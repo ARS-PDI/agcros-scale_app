@@ -43,16 +43,17 @@ namespace AgCROSScaleApp
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.sampleRepToolOption = new System.Windows.Forms.ToolStripMenuItem();
             this.scaleInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.calculateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnScaleInfo = new System.Windows.Forms.Button();
             this.btnRepeatedMeasures = new System.Windows.Forms.Button();
+            this.btnScaleInfo = new System.Windows.Forms.Button();
+            this.scaleControlCalculation1 = new AgCROSScaleApp.Controls.ScaleControlCalculation();
             this.scaleControlRepetitions1 = new AgCROSScaleApp.Controls.ScaleControlRepetitions();
             this.selectFileControl = new AgCROSScaleApp.Controls.SelectFileControl();
-            this.connectionControl = new AgCROSScaleApp.Controls.ConnectionControl();
             this.scaleControl1 = new AgCROSScaleApp.Controls.ScaleControl();
+            this.connectionControl = new AgCROSScaleApp.Controls.ConnectionControl();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -62,6 +63,7 @@ namespace AgCROSScaleApp
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.optionsToolStripMenuItem1,
+            this.calculateToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -156,6 +158,13 @@ namespace AgCROSScaleApp
             this.scaleInfoToolStripMenuItem.Visible = false;
             this.scaleInfoToolStripMenuItem.Click += new System.EventHandler(this.scaleInfoToolStripMenuItem_Click);
             // 
+            // calculateToolStripMenuItem
+            // 
+            this.calculateToolStripMenuItem.Name = "calculateToolStripMenuItem";
+            this.calculateToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.calculateToolStripMenuItem.Text = "Calculate";
+            this.calculateToolStripMenuItem.Click += new System.EventHandler(this.calculateToolStripMenuItem_Click);
+            // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -170,34 +179,33 @@ namespace AgCROSScaleApp
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(142, 251);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(375, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Note: data is saved after every reading and on close to the indicated save file.";
-            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.Controls.Add(this.scaleControlCalculation1);
             this.panel1.Controls.Add(this.btnRepeatedMeasures);
             this.panel1.Controls.Add(this.btnScaleInfo);
-            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.scaleControlRepetitions1);
             this.panel1.Controls.Add(this.selectFileControl);
-            this.panel1.Controls.Add(this.connectionControl);
             this.panel1.Controls.Add(this.scaleControl1);
+            this.panel1.Controls.Add(this.connectionControl);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(720, 574);
             this.panel1.TabIndex = 8;
+            // 
+            // btnRepeatedMeasures
+            // 
+            this.btnRepeatedMeasures.Location = new System.Drawing.Point(400, 126);
+            this.btnRepeatedMeasures.Name = "btnRepeatedMeasures";
+            this.btnRepeatedMeasures.Size = new System.Drawing.Size(189, 23);
+            this.btnRepeatedMeasures.TabIndex = 13;
+            this.btnRepeatedMeasures.Text = "Configure Repeated Measurements";
+            this.btnRepeatedMeasures.UseVisualStyleBackColor = true;
+            this.btnRepeatedMeasures.Click += new System.EventHandler(this.sampleRepToolOption_Click);
             // 
             // btnScaleInfo
             // 
@@ -210,15 +218,15 @@ namespace AgCROSScaleApp
             this.btnScaleInfo.UseVisualStyleBackColor = true;
             this.btnScaleInfo.Click += new System.EventHandler(this.scaleInfoToolStripMenuItem_Click);
             // 
-            // btnRepeatedMeasures
+            // scaleControlCalculation1
             // 
-            this.btnRepeatedMeasures.Location = new System.Drawing.Point(400, 126);
-            this.btnRepeatedMeasures.Name = "btnRepeatedMeasures";
-            this.btnRepeatedMeasures.Size = new System.Drawing.Size(189, 23);
-            this.btnRepeatedMeasures.TabIndex = 13;
-            this.btnRepeatedMeasures.Text = "Configure Repeated Measurements";
-            this.btnRepeatedMeasures.UseVisualStyleBackColor = true;
-            this.btnRepeatedMeasures.Click += new System.EventHandler(this.sampleRepToolOption_Click);
+            this.scaleControlCalculation1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.scaleControlCalculation1.Location = new System.Drawing.Point(69, 267);
+            this.scaleControlCalculation1.Name = "scaleControlCalculation1";
+            this.scaleControlCalculation1.Size = new System.Drawing.Size(580, 295);
+            this.scaleControlCalculation1.TabIndex = 14;
             // 
             // scaleControlRepetitions1
             // 
@@ -239,15 +247,6 @@ namespace AgCROSScaleApp
             this.selectFileControl.Size = new System.Drawing.Size(560, 59);
             this.selectFileControl.TabIndex = 10;
             // 
-            // connectionControl
-            // 
-            this.connectionControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectionControl.Location = new System.Drawing.Point(69, 166);
-            this.connectionControl.Name = "connectionControl";
-            this.connectionControl.Size = new System.Drawing.Size(560, 109);
-            this.connectionControl.TabIndex = 9;
-            // 
             // scaleControl1
             // 
             this.scaleControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -258,6 +257,16 @@ namespace AgCROSScaleApp
             this.scaleControl1.Name = "scaleControl1";
             this.scaleControl1.Size = new System.Drawing.Size(580, 295);
             this.scaleControl1.TabIndex = 1;
+            // 
+            // connectionControl
+            // 
+            this.connectionControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.connectionControl.BackColor = System.Drawing.Color.Transparent;
+            this.connectionControl.Location = new System.Drawing.Point(69, 166);
+            this.connectionControl.Name = "connectionControl";
+            this.connectionControl.Size = new System.Drawing.Size(560, 120);
+            this.connectionControl.TabIndex = 9;
             // 
             // ScaleAppMain
             // 
@@ -275,7 +284,6 @@ namespace AgCROSScaleApp
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -294,7 +302,6 @@ namespace AgCROSScaleApp
         private System.Windows.Forms.ToolStripMenuItem connectionSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem applicationSettingsToolStripMenuItem;
         private ScaleControl scaleControl1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
         private SelectFileControl selectFileControl;
         private ConnectionControl connectionControl;
@@ -304,6 +311,8 @@ namespace AgCROSScaleApp
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button btnScaleInfo;
         private System.Windows.Forms.Button btnRepeatedMeasures;
+        private System.Windows.Forms.ToolStripMenuItem calculateToolStripMenuItem;
+        private ScaleControlCalculation scaleControlCalculation1;
     }
 }
 

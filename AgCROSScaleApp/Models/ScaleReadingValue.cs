@@ -23,5 +23,13 @@ namespace AgCROSScaleApp
         public DateTime Timestamp { get; set; }
         public decimal Value { get; set; }
         public string Units { get; set; }
+
+        public override string ToString()
+        {
+            return
+                $"{Timestamp:o}," +
+                $"{Value}," +
+                $"\"{Units}\"";
+        }
     }
 }

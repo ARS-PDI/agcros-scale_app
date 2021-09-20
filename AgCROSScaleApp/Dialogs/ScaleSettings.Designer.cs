@@ -88,7 +88,7 @@ namespace AgCROSScaleApp.Dialogs
             // 
             // comboUnits
             // 
-            this.comboUnits.DataSource = Enum.GetValues(typeof(Constants.MTSICSUnits));
+            this.comboUnits.DataSource = Enum.GetValues(typeof(Constants.ScaleUnits));
             this.comboUnits.FormattingEnabled = true;
             this.comboUnits.Location = new System.Drawing.Point(132, 104);
             this.comboUnits.Name = "comboUnits";

@@ -15,7 +15,7 @@ namespace MeasurementEquipment.Utilities
         };
 
 
-        public enum MTSICSUnits
+        public enum ScaleUnits
         {
             g = 0,
             kg = 1,

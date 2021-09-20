@@ -55,7 +55,7 @@ namespace MeasurementEquipment.Scales
         private TimeSpan commTimeOut;
         private readonly AutoResetEvent waitHandle = new AutoResetEvent(false);
         private string response;
-        private Utilities.Constants.MTSICSUnits? unit;
+        private Utilities.Constants.ScaleUnits? unit;
 
         public bool IsConnected => serialConn?.IsOpen ?? false;
 
@@ -69,7 +69,7 @@ namespace MeasurementEquipment.Scales
             SerialConfiguration serialConfiguration,
             TimeSpan commTimeOut,
             // default is grams, if this is null, don't change units.
-            Utilities.Constants.MTSICSUnits? unit,
+            Utilities.Constants.ScaleUnits? unit,
             int NumRetries = 2)
         {
             this.serialCfg = serialConfiguration;

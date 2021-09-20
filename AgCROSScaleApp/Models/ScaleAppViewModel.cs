@@ -1,4 +1,5 @@
-﻿using AgCROSScaleApp.Utilities;
+﻿using AgCROSScaleApp.Models.Types;
+using AgCROSScaleApp.Utilities;
 using MeasurementEquipment.Models;
 using MeasurementEquipment.Scales;
 using MeasurementEquipment.Types;
@@ -24,11 +25,15 @@ namespace AgCROSScaleApp.Models
         public ConnectionModel Connection { get; set; }
         public ScaleInfoModel ScaleInfo { get; set; }
         public RepeatedMeasurementModel RepeatMeasures { get; set; }
+
+        public CalculationModel CalcModel { get; set; }
         public List<ScaleReadingValue> Readings { get; set; }
 
         public List<SerialPortValue> SerialPorts { get; set; }
 
         public SerialPortValue SelectedSerialPort { get; set; }
+
+        public AppTypes AppType { get; set; }
 
         public bool FileHasRead { get; set; }
 
@@ -64,10 +69,13 @@ namespace AgCROSScaleApp.Models
         {
             this.AllowTestDevice = false;
             this.FileHasRead = false;
+            AppType = AppTypes.NoCalculation;
             this.logger = Log.ForContext<ScaleAppViewModel>();
             ReadUserSettings();
             UpdatedRecords = false;
         }
+
+
 
         private void ReadUserSettings()
         {
@@ -105,6 +113,26 @@ namespace AgCROSScaleApp.Models
         public void UpdateModel()
         {
             FindSerialPorts();
+            if (FileSave != null)
+            {
+                if (AppType == AppTypes.NoCalculation)
+                {
+                    if (RepeatMeasures?.NumMeasurements > 1)
+                    {
+                        this.FileSave.FileType = FileTypes.MultiReading;
+                    }
+                    else
+                    {
+                        this.FileSave.FileType = FileTypes.SingleReading;
+                    }
+                }
+                else
+                {
+                    this.FileSave.FileType = FileTypes.CalculatedValue;
+                }
+            }
+
+
         }
 
 
@@ -152,6 +180,31 @@ namespace AgCROSScaleApp.Models
             UpdatedRecords = true;
         }
 
+        public bool CheckSaveNewCalcReading(string id, SampleTypes type)
+        {
+            return CalcModel.CanSaveNewCalcReading(id, type);
+        }
+
+        internal GridCalcModel SaveCalcReading(string id, TimestampedSample sample, SampleTypes type)
+        {
+            if (CalcModel.SaveCalcReading(id, sample, type))
+            {
+                CalcModel.CalculateModelValue(id, AppType);
+            }
+            UpdatedRecords = true;
+            return CalcModel.GridResults[id];
+        }
+        internal bool CheckCalcReadingId(string id, int rowID, SampleTypes type)
+        {
+            var gridResID = FindCalcRowIdForType(id, type);
+
+            if (gridResID < 0)
+            {
+                CalcModel.SetRowId(id, rowID, type);
+            }
+            return FindCalcRowIdForType(id, type) == rowID;
+        }
+
         public bool DeviceIsConnected()
         {
             return Connection.IsConnected;
@@ -191,7 +244,7 @@ namespace AgCROSScaleApp.Models
         {
             lock (fileSaveLock)
             {
-                if ((this.Readings?.Count ?? 0) <= 0)
+                if (this.AppType == AppTypes.NoCalculation && (this.Readings?.Count ?? 0) <= 0)
                 {
                     logger.Debug("Nothing to save, not generating CSV...");
                     return;
@@ -206,6 +259,8 @@ namespace AgCROSScaleApp.Models
             }
         }
 
+
+
         public void CreateBackup()
         {
             lock (fileSaveLock)
@@ -217,6 +272,11 @@ namespace AgCROSScaleApp.Models
         internal void Disconnect()
         {
             this.Connection.Disconnect();
+        }
+
+        internal int FindCalcRowIdForType(string id, SampleTypes type)
+        {
+            return CalcModel.FindRowID(id, type);
         }
     }
 }

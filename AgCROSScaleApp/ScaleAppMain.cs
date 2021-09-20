@@ -1,17 +1,10 @@
 ﻿using AgCROSScaleApp.Dialogs;
 using AgCROSScaleApp.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using unvell.ReoGrid.IO.OpenXML.Schema;
 
 namespace AgCROSScaleApp
 {
@@ -63,17 +56,25 @@ namespace AgCROSScaleApp
                     CreateBackupsTask();
                 });
                 // turn on grid.
-                if (this.model.RepeatMeasures.NumMeasurements <= 1)
+                switch (model.FileSave.FileType)
                 {
-                    this.scaleControl1.Visible = connected;
-                    this.scaleControl1.Enabled = connected;
-                    this.scaleControl1.SetVM(model);
-                }
-                else
-                {
-                    this.scaleControlRepetitions1.Visible = connected;
-                    this.scaleControlRepetitions1.Enabled = connected;
-                    this.scaleControlRepetitions1.SetVM(model);
+                    case Models.Types.FileTypes.CalculatedValue:
+                        this.scaleControlCalculation1.Visible = connected;
+                        this.scaleControlCalculation1.Enabled = connected;
+                        this.scaleControlCalculation1.SetVM(model);
+                        break;
+                    case Models.Types.FileTypes.SingleReading:
+                        this.scaleControl1.Visible = connected;
+                        this.scaleControl1.Enabled = connected;
+                        this.scaleControl1.SetVM(model);
+                        break;
+                    case Models.Types.FileTypes.MultiReading:
+                        this.scaleControlRepetitions1.Visible = connected;
+                        this.scaleControlRepetitions1.Enabled = connected;
+                        this.scaleControlRepetitions1.SetVM(model);
+                        break;
+                    default:
+                        break;
                 }
                 // read in file info if it exists.
             }
@@ -83,15 +84,23 @@ namespace AgCROSScaleApp
                 this.scaleControl1.Enabled = connected;
                 this.scaleControlRepetitions1.Visible = connected;
                 this.scaleControlRepetitions1.Enabled = connected;
+                this.scaleControlCalculation1.Visible = connected;
+                this.scaleControlCalculation1.Enabled = connected;
                 //
                 arEvent.Set();
-                if (this.model.RepeatMeasures.NumMeasurements <= 1)
+                switch (model.FileSave.FileType)
                 {
-                    this.scaleControl1.GridCleanup();
-                }
-                else
-                {
-                    this.scaleControlRepetitions1.GridCleanup();
+                    case Models.Types.FileTypes.CalculatedValue:
+                        this.scaleControlCalculation1.GridCleanup();
+                        break;
+                    case Models.Types.FileTypes.SingleReading:
+                        this.scaleControl1.GridCleanup();
+                        break;
+                    case Models.Types.FileTypes.MultiReading:
+                        this.scaleControlRepetitions1.GridCleanup();
+                        break;
+                    default:
+                        break;
                 }
                 this.model.SaveFile();
                 // spread cleanup
@@ -100,7 +109,7 @@ namespace AgCROSScaleApp
 
         private void ConfigureControls()
         {
-            if ((this.model.RepeatMeasures?.ModelIsValid() ?? false)
+            if (((this.model.RepeatMeasures?.ModelIsValid() ?? false) || this.model.AppType != Models.Types.AppTypes.NoCalculation)
                 && (this.model.ScaleInfo?.ModelIsValid() ?? false)
                 && !string.IsNullOrEmpty(model.FileSave?.FileName ?? ""))
             {
@@ -110,14 +119,27 @@ namespace AgCROSScaleApp
             {
                 this.connectionControl.Enabled = false;
             }
-            if (this.model.RepeatMeasures?.ModelIsValid() ?? false)
+
+            if (this.model.AppType == Models.Types.AppTypes.NoCalculation)
             {
-                this.btnRepeatedMeasures.BackColor = Color.Green;
+                this.btnRepeatedMeasures.Visible = true;
+                this.btnRepeatedMeasures.Enabled = true;
+                this.btnRepeatedMeasures.BackColor = Color.Yellow;
+                if (this.model.RepeatMeasures?.ModelIsValid() ?? false)
+                {
+                    this.btnRepeatedMeasures.BackColor = Color.Green;
+                }
+                else
+                {
+                    this.btnRepeatedMeasures.BackColor = Color.Yellow;
+                }
             }
             else
             {
-                this.btnRepeatedMeasures.BackColor = Color.Yellow;
+                this.btnRepeatedMeasures.Visible = false;
+                this.btnRepeatedMeasures.Enabled = false;
             }
+
             if (this.model.ScaleInfo?.ModelIsValid() ?? false)
             {
                 this.btnScaleInfo.BackColor = Color.Green;
@@ -126,12 +148,15 @@ namespace AgCROSScaleApp
             {
                 this.btnScaleInfo.BackColor = Color.Yellow;
             }
+
             this.btnRepeatedMeasures.Enabled = !string.IsNullOrEmpty(model.FileSave?.FileName ?? "");
             this.btnScaleInfo.Enabled = !string.IsNullOrEmpty(model.FileSave?.FileName ?? "");
             this.scaleControl1.Visible = false;
             this.scaleControl1.Enabled = false;
+            this.scaleControlRepetitions1.Enabled = false;
             this.scaleControlRepetitions1.Visible = false;
-            this.scaleControlRepetitions1.Visible = false;
+            this.scaleControlCalculation1.Enabled = false;
+            this.scaleControlCalculation1.Visible = false;
         }
 
         private void SelectFileButtonClicked(object sender, EventArgs e)
@@ -146,7 +171,10 @@ namespace AgCROSScaleApp
                 this.model.ScaleInfo = tmpModel.ScaleInfo;
                 this.model.FileSave = tmpModel.FileSave;
                 this.model.Readings = tmpModel.Readings;
+                this.model.AppType = tmpModel.AppType;
+                this.model.CalcModel = tmpModel.CalcModel;
                 this.model.FileHasRead = true;
+                this.model.UpdatedRecords = false;
                 this.model.UpdateModel();
                 if (!string.IsNullOrEmpty(model.FileSave?.FileName ?? ""))
                 {
@@ -239,7 +267,6 @@ namespace AgCROSScaleApp
             dialog.StartPosition = FormStartPosition.CenterParent;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-
                 this.model.UpdateModel();
                 ConfigureControls();
             } // only update if a change to the configuration occurred
@@ -271,6 +298,12 @@ namespace AgCROSScaleApp
 
         private void ScaleAppMain_Load(object sender, EventArgs e)
         {
+        }
+
+        private void calculateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var outputDlg = new OutputCalculator();
+            outputDlg.ShowDialog();
         }
     }
 }
